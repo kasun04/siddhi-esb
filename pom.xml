@@ -32,44 +32,16 @@
     </parent>
 
     <groupId>org.apache.synapse</groupId>
-    <artifactId>Apache-Synapse</artifactId>
-    <version>2.1.1-wso2v7</version>
+    <artifactId>Siddhi-ESB</artifactId>
+    <version>1.0.0</version>
 
-    <name>Apache Synapse</name>
-    <description>Apache Synapse</description>
+    <name>Siddhi ESB</name>
+    <description>Siddhi ESB</description>
 
     <packaging>pom</packaging>
-    <url>http://synapse.apache.org/</url>
+    <url>https://github.com/kasun04/siddhi-esb</url>
 
-    <issueManagement>
-        <url>http://issues.apache.org/jira/browse/SYNAPSE</url>
-    </issueManagement>
 
-    <mailingLists>
-        <mailingList>
-            <name>Apache Synapse Developer List</name>
-            <subscribe>dev-subscribe@synapse.apache.org</subscribe>
-            <unsubscribe>dev-unsubscribe@synapse.apache.org</unsubscribe>
-            <post>dev@synapse.apache.org</post>
-            <archive>http://mail-archives.apache.org/mod_mbox/synapse-dev/</archive>
-        </mailingList>
-        <mailingList>
-            <name>Apache Synapse User List</name>
-            <subscribe>user-subscribe@synapse.apache.org</subscribe>
-            <unsubscribe>user-unsubscribe@synapse.apache.org</unsubscribe>
-            <post>user@synapse.apache.org</post>
-            <archive>http://mail-archives.apache.org/mod_mbox/synapse-user/</archive>
-        </mailingList>
-	<mailingList>
-            <name>Apache Synapse Commits List</name>
-            <subscribe>commits-subscribe@synapse.apache.org</subscribe>
-            <unsubscribe>commits-unsubscribe@synapse.apache.org</unsubscribe>
-            <post>commits@synapse.apache.org</post>
-            <archive>http://mail-archives.apache.org/mod_mbox/synapse-commits/</archive>
-        </mailingList>
-    </mailingLists>
-
-    <inceptionYear>2005</inceptionYear>
 
     <licenses>
         <license>
@@ -78,93 +50,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-    <scm>
-        <connection>scm:svn:http://svn.apache.org/repos/asf/synapse/trunk/java
-        </connection>
-        <developerConnection>scm:svn:https://svn.apache.org/repos/asf/synapse/trunk/java
-        </developerConnection>
-        <url>http://svn.apache.org/viewvc/synapse/trunk/java/</url>
-    </scm>
-
-    <organization>
-        <name>Apache Software Foundation</name>
-        <url>http://www.apache.org/</url>
-    </organization>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.1</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <attach>true</attach>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <activation>
-                <property>
-                    <name>release</name>
-                </property>
-            </activation>
-        </profile>
-        <profile>
-            <id>hudson</id>
-            <activation>
-                <property>
-                    <name>hudson</name>
-                </property>
-            </activation>
-            <repositories>
-                <repository>
-                    <id>apache-snapshots</id>
-                    <name>Apache Maven 2 Snapshot Repository</name>
-                    <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-                    <releases>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <updatePolicy>interval:60</updatePolicy>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>wso2-m2</id>
-                    <name>WSO2 Maven 2 Repository</name>
-                    <url>http://dist.wso2.org/maven2/</url>
-                    <releases>
-                        <updatePolicy>never</updatePolicy>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-                <repository>
-                    <id>wso2-m2-snapshots</id>
-                    <name>WSO2 Maven 2 SNAPSHOTS Repository</name>
-                    <url>http://dist.wso2.org/snapshots/maven2/</url>
-                    <releases>
-                        <enabled>false</enabled>
-                    </releases>
-                    <snapshots>
-                        <enabled>true</enabled>
-                        <updatePolicy>interval:60</updatePolicy>
-                    </snapshots>
-                </repository>
-
-            </repositories>
-        </profile>
-    </profiles>
 
     <pluginRepositories>
         <pluginRepository>
