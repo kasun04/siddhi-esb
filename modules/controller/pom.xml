@@ -32,8 +32,8 @@
 
     <groupId>org.apache.synapse</groupId>
     <artifactId>controller</artifactId>
-    <name>Apache Synapse - ESB Controller</name>
-    <description>Apache Synapse - ESB Controller</description>
+    <name>Siddhi ESB - Controller</name>
+    <description>Siddhi ESB - ESB Controller</description>
     <packaging>jar</packaging>
 
 

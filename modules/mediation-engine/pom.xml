@@ -32,8 +32,8 @@
 
     <groupId>org.apache.synapse</groupId>
     <artifactId>mediation-engine</artifactId>
-    <name>Apache Synapse - Mediation Engine</name>
-    <description>Apache Synapse - Mediation Engine</description>
+    <name>Siddhi ESB - Mediation Engine</name>
+    <description>Siddhi - Mediation Engine</description>
     <packaging>jar</packaging>
 
 

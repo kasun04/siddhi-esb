@@ -32,8 +32,8 @@
 
     <groupId>org.apache.synapse</groupId>
     <artifactId>common-api</artifactId>
-    <name>Apache Synapse - Common API</name>
-    <description>Apache Synapse - Common API</description>
+    <name>Siddhi ESB - Common API</name>
+    <description>Siddhi ESB - Common API</description>
     <packaging>jar</packaging>
 
 

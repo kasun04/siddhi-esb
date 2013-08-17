@@ -32,8 +32,8 @@
 
     <groupId>org.apache.synapse</groupId>
     <artifactId>synapse-nhttp-transport</artifactId>
-    <name>Apache Synapse - Non-blocking HTTP/s Transport</name>
-    <description>Apache Synapse - Non-blocking HTTP/s Transport</description>
+    <name>Siddhi ESB - Non-blocking HTTP/s Pass-Thru Transport</name>
+    <description>Siddhi ESB - Non-blocking HTTP/s Pass-Thru Transport</description>
     <packaging>bundle</packaging>
 
     <build>
