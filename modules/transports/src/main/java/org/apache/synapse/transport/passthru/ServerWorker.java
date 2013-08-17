@@ -31,9 +31,7 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.protocol.HTTP;
 import org.apache.synapse.common.api.DefaultPassThruContext;
 import org.apache.synapse.common.api.MediationEngineAPI;
-import org.apache.synapse.engine.*;
 import org.apache.synapse.common.api.PassThruContext;
-import org.apache.synapse.transport.ESBEngine;
 import org.apache.synapse.transport.passthru.config.SourceConfiguration;
 
 /**

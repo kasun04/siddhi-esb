@@ -27,7 +27,6 @@ import org.apache.http.protocol.HTTP;
 import org.apache.synapse.common.api.DefaultPassThruContext;
 import org.apache.synapse.common.api.MediationEngineAPI;
 import org.apache.synapse.common.api.PassThruContext;
-import org.apache.synapse.transport.ESBEngine;
 
 public class ClientWorker implements Runnable {
     private Log log = LogFactory.getLog(ClientWorker.class);
