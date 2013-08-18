@@ -63,8 +63,8 @@ public class SourceHandler implements NHttpServerEventHandler {
     }
 
     public void connected(NHttpServerConnection conn) {
+        //System.out.println("============ Connected ===============");
         // we have to have these two operations in order
-        System.out.println("============ Connected ===============");
         sourceConfiguration.getSourceConnections().addConnection(conn);
         SourceContext.create(conn, ProtocolState.REQUEST_READY, sourceConfiguration);
     }
@@ -72,7 +72,7 @@ public class SourceHandler implements NHttpServerEventHandler {
     public void requestReceived(NHttpServerConnection conn) {
         try {
 
-            System.out.println("============ SourceHandler : requestReceived ===============");
+            //System.out.println("============ SourceHandler : requestReceived ===============");
 
             HttpContext _context = conn.getContext();
         	_context.setAttribute(PassThroughConstants.REQ_ARRIVAL_TIME, System.currentTimeMillis());
@@ -94,15 +94,11 @@ public class SourceHandler implements NHttpServerEventHandler {
 
             request.start(conn);
 
-            /******/
             String method = request.getRequest() != null ? request.getRequest().getRequestLine().getMethod().toUpperCase():"";
             OutputStream os = null;
             if ("GET".equals(method) || "HEAD".equals(method)) {
 				HttpContext context = request.getConnection().getContext();
 				ContentOutputBuffer outputBuffer = new SimpleOutputBuffer(8192,	new HeapByteBufferAllocator());
-				// ContentOutputBuffer outputBuffer
-				// = new SharedOutputBuffer(8192, conn, new
-				// HeapByteBufferAllocator());
 				context.setAttribute("synapse.response-source-buffer",outputBuffer);
 				os = new ContentOutputStream(outputBuffer);
 			} 
@@ -128,7 +124,7 @@ public class SourceHandler implements NHttpServerEventHandler {
 
     public void inputReady(NHttpServerConnection conn,
                            ContentDecoder decoder) {
-        System.out.println("============ SourceHandler :  inputReady ===============");
+        //System.out.println("============ SourceHandler :  inputReady ===============");
 
         ProtocolState protocolState = SourceContext.getState(conn);
 

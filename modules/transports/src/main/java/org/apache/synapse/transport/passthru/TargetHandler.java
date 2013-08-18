@@ -71,7 +71,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     public void connected(NHttpClientConnection conn, Object o) {
         assert o instanceof HostConnections : "Attachment should be a HostConnections";
 
-        System.out.println("============ TargetHandler :  connected ===============");
+        //System.out.println("============ TargetHandler :  connected ===============");
 
         HostConnections pool = (HostConnections) o;
         conn.getContext().setAttribute(PassThroughConstants.CONNECTION_POOL, pool);
@@ -97,7 +97,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     }
 
     public void requestReady(NHttpClientConnection conn) {
-        System.out.println("============ TargetHandler :  requestReady ===============");
+        //System.out.println("============ TargetHandler :  requestReady ===============");
 
         HttpContext context = conn.getContext();
         ProtocolState connState = null;
@@ -148,7 +148,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     }
 
     public void outputReady(NHttpClientConnection conn, ContentEncoder encoder) {
-        System.out.println("============ TargetHandler :  outputReady ===============");
+        //System.out.println("============ TargetHandler :  outputReady ===============");
 
         ProtocolState connState = null;
         try {
@@ -180,7 +180,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     }
 
     public void responseReceived(NHttpClientConnection conn) {
-        System.out.println("============ TargetHandler :  responseReceived ===============");
+        //System.out.println("============ TargetHandler :  responseReceived ===============");
 
         HttpContext context = conn.getContext();
         HttpResponse response = conn.getHttpResponse();
@@ -250,7 +250,7 @@ public class TargetHandler implements NHttpClientEventHandler {
 
 
     public void inputReady(NHttpClientConnection conn, ContentDecoder decoder) {
-        System.out.println("============ TargetHandler :  inputReady ===============");
+        //System.out.println("============ TargetHandler :  inputReady ===============");
 
         ProtocolState connState;
         try {
@@ -289,7 +289,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     }
 
     public void closed(NHttpClientConnection conn) {
-        System.out.println("============ TargetHandler :  closed ===============");
+        //System.out.println("============ TargetHandler :  closed ===============");
 
         ProtocolState state = TargetContext.getState(conn);
         
@@ -344,7 +344,7 @@ public class TargetHandler implements NHttpClientEventHandler {
     }
 
     public void timeout(NHttpClientConnection conn) {
-        System.out.println("============ TargetHandler :  timeout ===============");
+        //System.out.println("============ TargetHandler :  timeout ===============");
 
         ProtocolState state = TargetContext.getState(conn);
 

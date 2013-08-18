@@ -103,7 +103,7 @@ public class ClientWorker implements Runnable {
         // used at the sender to set the proper status code when passing the message
         int statusCode = this.response.getStatus();
         // process response received
-        System.out.println("Client Worker Invoked .... ");
+        //System.out.println("Client Worker Invoked .... ");
         /*ToDo Dispatch to Engine*/
         genericMediationEngine.process(clientWorkerPTCtx);
         //new ESBEngine().process(clientWorkerPTCtx);

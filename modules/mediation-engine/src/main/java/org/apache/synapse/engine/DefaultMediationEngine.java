@@ -13,7 +13,7 @@ public class DefaultMediationEngine implements MediationEngineAPI {
     }
 
     public void process(PassThruContext passThruContext) {
-        System.out.println("=== Injected to Default Mediation Engine ===");
+        //System.out.println("=== Injected to Default Mediation Engine ===");
         transportSender.invoke(passThruContext);
 
     }
