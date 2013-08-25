@@ -32,8 +32,12 @@ public class ESBController {
 
         /*Starting TransportListener*/
         transportListener.start();
+    }
 
-
+    public void stop() {
+        transportListener.stop();
+        mediationEngine.stop();
+        transportSender.destroy();
     }
 
     public static void main(String[] args) {

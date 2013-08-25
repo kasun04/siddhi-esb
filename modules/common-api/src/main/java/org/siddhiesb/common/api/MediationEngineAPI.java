@@ -7,6 +7,8 @@ public interface MediationEngineAPI {
 
     public void process(PassThruContext passThruContext);
 
+    public void stop();
+
 
 
 }
