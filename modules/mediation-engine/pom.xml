@@ -30,7 +30,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.synapse</groupId>
+    <groupId>org.siddhiesb</groupId>
     <artifactId>mediation-engine</artifactId>
     <name>Siddhi ESB - Mediation Engine</name>
     <description>Siddhi - Mediation Engine</description>

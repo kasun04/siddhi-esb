@@ -19,7 +19,7 @@
   -->
 <aspectj>
     <weaver options="-showWeaveInfo">
-        <include within="org.apache.synapse.transport..*"/>
+        <include within="org.siddhiesb.transport..*"/>
         <include within="org.apache.axis2.transport.base..*"/>
     </weaver>
 </aspectj>

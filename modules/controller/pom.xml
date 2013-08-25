@@ -30,7 +30,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.synapse</groupId>
+    <groupId>org.siddhiesb</groupId>
     <artifactId>controller</artifactId>
     <name>Siddhi ESB - Controller</name>
     <description>Siddhi ESB - ESB Controller</description>
@@ -39,18 +39,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
+            <groupId>org.siddhiesb</groupId>
             <artifactId>common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
+            <groupId>org.siddhiesb</groupId>
             <artifactId>mediation-engine</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-nhttp-transport</artifactId>
+            <groupId>org.siddhiesb</groupId>
+            <artifactId>siddhiesb-passthru-transport</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

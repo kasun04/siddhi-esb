@@ -30,7 +30,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.apache.synapse</groupId>
+    <groupId>org.siddhiesb</groupId>
     <artifactId>common-api</artifactId>
     <name>Siddhi ESB - Common API</name>
     <description>Siddhi ESB - Common API</description>
