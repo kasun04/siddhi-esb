@@ -20,9 +20,9 @@
 package org.apache.synapse.transport.passthru.workerpool;
 
 
-import org.apache.axis2.transport.base.threads.watermark.DefaultWaterMarkQueue;
+/*import org.apache.axis2.transport.base.threads.watermark.DefaultWaterMarkQueue;
 import org.apache.axis2.transport.base.threads.watermark.WaterMarkExecutor;
-import org.apache.axis2.transport.base.threads.watermark.WaterMarkQueue;
+import org.apache.axis2.transport.base.threads.watermark.WaterMarkQueue;*/
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

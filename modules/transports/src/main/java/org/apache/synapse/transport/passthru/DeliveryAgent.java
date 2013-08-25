@@ -187,7 +187,6 @@ public class DeliveryAgent {
             NHttpClientConnection conn = targetConnections.getConnection(route);
             if (conn != null) {
                 PassThruContext messageContext = queue.poll();
-
                 if (messageContext != null) {
                     tryNextMessage(messageContext, route, conn);
                 }

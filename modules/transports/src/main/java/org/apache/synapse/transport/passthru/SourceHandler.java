@@ -63,7 +63,7 @@ public class SourceHandler implements NHttpServerEventHandler {
     }
 
     public void connected(NHttpServerConnection conn) {
-        //System.out.println("============ Connected ===============");
+        System.out.println("============ Connected ===============");
         // we have to have these two operations in order
         sourceConfiguration.getSourceConnections().addConnection(conn);
         SourceContext.create(conn, ProtocolState.REQUEST_READY, sourceConfiguration);
@@ -139,7 +139,7 @@ public class SourceHandler implements NHttpServerEventHandler {
         try {
             int readBytes = request.read(conn, decoder);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }

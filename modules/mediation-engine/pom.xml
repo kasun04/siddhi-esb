@@ -24,9 +24,9 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.apache.synapse</groupId>
-        <artifactId>Apache-Synapse</artifactId>
-        <version>2.1.1-wso2v7</version>
+        <groupId>org.siddhiesb</groupId>
+        <artifactId>siddhi-esb</artifactId>
+        <version>1.0.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>common-api</artifactId>
-            <version>2.1.1-wso2v7</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.siddhi</groupId>
@@ -56,7 +56,6 @@
     </dependencies>
 
     <properties>
-        <aspectj.version>1.6.1</aspectj.version>
     </properties>
 
 </project>

@@ -18,10 +18,7 @@ package org.apache.synapse.transport.passthru;
 
 import java.io.OutputStream;
 
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axis2.transport.http.HTTPConstants;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -104,7 +101,7 @@ public class ServerWorker implements Runnable {
         if (request.isEntityEnclosing()) {
             processEntityEnclosingRequest();
         } else {
-            processNonEntityEnclosingRESTHandler(null);
+            //processNonEntityEnclosingRESTHandler(null);
         }
         sendAck();
     }
@@ -112,30 +109,31 @@ public class ServerWorker implements Runnable {
     private void sendAck() {
 
     }
-
+/*
     private void processNonEntityEnclosingRESTHandler(SOAPEnvelope soapEnvelope) {
         String soapAction = request.getHeaders().get(SOAP_ACTION_HEADER);
         if ((soapAction != null) && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
             soapAction = soapAction.substring(1, soapAction.length() - 1);
         }
-        /*
+        *//*
         ToDo : Dispatch to Engine
         AxisEngine.receive(msgContext);
-       */
-    }
+       *//*
+    }*/
 
     private void processEntityEnclosingRequest() {
         String contentTypeHeader = request.getHeaders().get(HTTP.CONTENT_TYPE);
         String method = request.getRequest() != null ? request.getRequest().getRequestLine().getMethod().toUpperCase() : "";
 
         passThruContext.setProperty("To", request.getUri());
-        passThruContext.setProperty(HTTPConstants.HTTP_METHOD, method);
+        passThruContext.setProperty("HTTP_METHOD", method);
         passThruContext.setProperty(HTTP.CONTENT_TYPE, contentTypeHeader);
 
         /*Setting the PassThru Pipe*/
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_PIPE, request.getPipe());
 
         /*ToDo : Set Pipe and dispatch to Mediation Engine */
+        System.out.println("Dispatching to Engine");
         genericMediationEngine.process(passThruContext);
 
 
@@ -143,11 +141,6 @@ public class ServerWorker implements Runnable {
     }
 
 
-    private boolean isRest(String contentType) {
-        return contentType != null &&
-                contentType.indexOf(SOAP11Constants.SOAP_11_CONTENT_TYPE) == -1 &&
-                contentType.indexOf(SOAP12Constants.SOAP_12_CONTENT_TYPE) == -1;
-    }
 
     private void handleException(String msg, Exception e) {
         if (e == null) {

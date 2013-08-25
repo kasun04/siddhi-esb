@@ -20,8 +20,6 @@ package org.apache.synapse.transport.http.access;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.securevault.commons.MiscellaneousUtil;
-
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -171,8 +169,9 @@ public class AccessLogger {
     protected synchronized void open() {
         // Create the directory if necessary
         File dir;
-        Properties synapseProps = MiscellaneousUtil.loadProperties(NHTTP_PROPERTIES);
-        String nhttpLogDir =  synapseProps.getProperty(NHTTP_LOG_DIRECTORY);
+        /*Properties synapseProps = MiscellaneousUtil.loadProperties(NHTTP_PROPERTIES);
+        String nhttpLogDir =  synapseProps.getProperty(NHTTP_LOG_DIRECTORY);*/
+        String nhttpLogDir = "./access_logs";
         if (nhttpLogDir != null) {
             dir = new File(nhttpLogDir);
         } else {

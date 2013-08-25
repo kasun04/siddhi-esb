@@ -182,7 +182,7 @@ public class Pipe {
         lock.lock();
         try {
             setInputMode(buffer, inBufferInputMode);
-            int bytesRead=0;
+            int bytesRead = 0;
             try{
                 bytesRead = decoder.read(buffer);
             } catch(MalformedChunkCodingException ignore) {

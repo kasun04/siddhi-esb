@@ -106,7 +106,7 @@ public class TransportSender implements TransportSenderAPI {
         targetConfiguration.setConnections(targetConnections);
         // create the delivery agent to hand over messages
 
-        deliveryAgent = new DeliveryAgent(targetConfiguration, targetConnections,null);
+        deliveryAgent = new DeliveryAgent(targetConfiguration, targetConnections, null);
         connectCallback.setDeliveryAgent(deliveryAgent);
 
         handler = new TargetHandler(deliveryAgent, clientConnFactory, targetConfiguration, mediationEngine);
