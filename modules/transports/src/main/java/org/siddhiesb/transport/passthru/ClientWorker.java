@@ -24,8 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.protocol.HTTP;
-import org.siddhiesb.transport.passthru.PassThroughConstants;
-import org.siddhiesb.transport.passthru.TargetResponse;
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.DefaultPassThruContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
 import org.siddhiesb.common.api.PassThruContext;
@@ -83,7 +82,9 @@ public class ClientWorker implements Runnable {
         clientWorkerPTCtx.setProperty(PassThroughConstants.PASS_THROUGH_TARGET_CONNECTION, response.getConnection());
 
         /*To identify a response in the transport sender*/
-        clientWorkerPTCtx.setProperty("RESPONSE", "TRUE");
+        clientWorkerPTCtx.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE);
+        /*Co-relation Request-Response*/
+        clientWorkerPTCtx.setCtxId(passThruContext.getCtxId());
 
         genericMediationEngine = mediationEngine;
     }
@@ -103,12 +104,12 @@ public class ClientWorker implements Runnable {
         }
         // copy the HTTP status code as a message context property with the key HTTP_SC to be
         // used at the sender to set the proper status code when passing the message
+
         int statusCode = this.response.getStatus();
-        // process response received
-        //System.out.println("Client Worker Invoked .... ");
-        /*ToDo Dispatch to Engine*/
+
+        /*Dispatching to the MediationEngine*/
         genericMediationEngine.process(clientWorkerPTCtx);
-        //new ESBEngine().process(clientWorkerPTCtx);
+
     }
 
     private String inferContentType() {

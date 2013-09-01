@@ -12,13 +12,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.SyncBasicHttpParams;
-import org.siddhiesb.transport.passthru.*;
-import org.siddhiesb.transport.passthru.DeliveryAgent;
-import org.siddhiesb.transport.passthru.Pipe;
-import org.siddhiesb.transport.passthru.SourceContext;
-import org.siddhiesb.transport.passthru.SourceRequest;
-import org.siddhiesb.transport.passthru.SourceResponse;
-import org.siddhiesb.transport.passthru.TargetHandler;
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.MediationEngineAPI;
 import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.common.api.TransportSenderAPI;
@@ -135,19 +129,19 @@ public class TransportSender implements TransportSenderAPI {
 
 
     public void invoke(PassThruContext passThruContext) {
+        String messageDirection = (String)passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION);
+        if (CommonAPIConstants.MESSAGE_DIRECTION_REQUEST.equals(messageDirection)) {
+            /*Request Path*/
+            String endpointAddress = (String)passThruContext.getProperty(CommonAPIConstants.ENDPOINT);
+            passThruContext.setProperty(CommonAPIConstants.ENDPOINT, endpointAddress);
 
-        if ("TRUE".equals((String) passThruContext.getProperty("RESPONSE"))) {
-            /*response path*/
-            submitResponse(passThruContext);
-        } else {
-            String endpointAddress = "http://localhost:9000/services/SimpleStockQuoteService";
-            passThruContext.setProperty("To", endpointAddress);
             /*ToDo: Check to PT Pipe*/
             deliveryAgent.submit(passThruContext);
-
-            /*submit request ? */
+            /*submit request ?*/
+        } else if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.equals(messageDirection)) {
+            /*Response Path*/
+            submitResponse(passThruContext);
         }
-
     }
 
     public void submitResponse(PassThruContext passThruContext) {
@@ -166,6 +160,10 @@ public class TransportSender implements TransportSenderAPI {
         sourceResponse.connect(pipe);
 
         conn.requestOutput();
+    }
+
+    public void destroy() {
+
     }
 
 

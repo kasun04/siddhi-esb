@@ -1,66 +1,56 @@
 package org.siddhiesb.engine;
 
-import org.siddhiesb.common.api.MediationEngineAPI;
-import org.siddhiesb.common.api.PassThruContext;
-import org.siddhiesb.common.api.TransportSenderAPI;
+import org.siddhiesb.common.api.*;
 import org.wso2.siddhi.core.SiddhiManager;
-import org.wso2.siddhi.core.event.Event;
-import org.wso2.siddhi.core.query.output.callback.QueryCallback;
 import org.wso2.siddhi.core.stream.input.InputHandler;
-import org.wso2.siddhi.core.util.EventPrinter;
-import org.wso2.siddhi.query.api.definition.StreamDefinition;
-import org.wso2.siddhi.query.api.query.Query;
-import org.wso2.siddhi.query.compiler.SiddhiCompiler;
 
 
 public class DefaultMediationEngine implements MediationEngineAPI {
 
-    private TransportSenderAPI transportSender;
     SiddhiManager siddhiManager;
-    InputHandler inputHandler;
-    StreamDefinition streamDefinition;
-    String queryReference;
-    PassThruContext ctx;
-
+    DefaultSender defaultSender;
 
     public void init(TransportSenderAPI transportSenderAPI) {
-        transportSender = transportSenderAPI;
 
+        String executionPlan = "define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string);\n" +
+                /*"define stream sender ( ptcontext string, endpoint string, receivingFlow string);\n" +*/
+                "from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow insert into sender;\n";
+        defaultSender = new DefaultSender(transportSenderAPI);
         siddhiManager = new SiddhiManager();
 
-        streamDefinition = SiddhiCompiler.parseStreamDefinition("define stream cseEventStream ( symbol string, price float, volume int )");
-        inputHandler = siddhiManager.defineStream(streamDefinition);
-        Query query = SiddhiCompiler.parseQuery("from  cseEventStream [price >= 20] " +
-                "select symbol, avg(price) as avgPrice " +
-                "group by symbol " +
-                "having avgPrice>50 " +
-                "insert into StockQuote; "
-        );
-        queryReference = siddhiManager.addQuery(query);
-        siddhiManager.addCallback(queryReference, new QueryCallback() {
-            @Override
-            public void receive(long timeStamp, Event[] inEvents, Event[] removeEvents) {
-                EventPrinter.print(timeStamp, inEvents, removeEvents);
-                System.out.println("Called.........");
-                transportSender.invoke(ctx);
-            }
-        });
+        siddhiManager.addExecutionPlan(executionPlan);
+        siddhiManager.addCallback(SiddhiESBMediationConstants.SENDER, defaultSender);
+
     }
 
     public void process(PassThruContext passThruContext) {
-        //transportSender.invoke(passThruContext);
-        ctx = passThruContext;
-        try {
-            inputHandler.send(new Object[]{"IBM", 75.6f, 100});
-        } catch (InterruptedException e) {
-        }
 
-
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        if (CommonAPIConstants.MESSAGE_DIRECTION_REQUEST.
+                equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+            /*Handling Request*/
+            processRequest(passThruContext);
+        } else if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.
+                equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+            /*Handling Response*/
+            processResponse(passThruContext);
         }
+    }
+
+    public void stop() {
+
+    }
+
+    private void processRequest(PassThruContext passThruContext) {
+        try {
+            InputHandler inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.IN_FLOW);
+            inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processResponse(PassThruContext passThruContext) {
+        defaultSender.send(passThruContext);
 
     }
 

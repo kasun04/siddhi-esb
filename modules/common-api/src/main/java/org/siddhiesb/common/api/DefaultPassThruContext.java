@@ -6,6 +6,8 @@ import java.util.Map;
 
 public class DefaultPassThruContext implements PassThruContext {
 
+    private String messageId;
+
     private Map<String, Object> propertyMap = new HashMap<String, Object>();
 
 
@@ -20,6 +22,14 @@ public class DefaultPassThruContext implements PassThruContext {
 
     public void setProperty(String key, Object val) {
         propertyMap.put(key, val);
+    }
+
+    public String getCtxId() {
+        return messageId;
+    }
+
+    public void setCtxId(String messageId) {
+        this.messageId = messageId;
     }
 
     public void reset() {

@@ -26,12 +26,12 @@ import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.protocol.HTTP;
-import org.siddhiesb.transport.passthru.PassThroughConstants;
-import org.siddhiesb.transport.passthru.SourceRequest;
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.DefaultPassThruContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
 import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.transport.passthru.config.SourceConfiguration;
+import org.siddhiesb.transport.passthru.util.PTTUtils;
 
 /**
  * This is a worker thread for executing an incoming request in to the transport.
@@ -70,6 +70,7 @@ public class ServerWorker implements Runnable {
         this.sourceConfiguration = sourceConfiguration;
 
         passThruContext = new DefaultPassThruContext();
+        passThruContext.setCtxId(PTTUtils.generateUUID());
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_REQUEST, request);
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION, sourceConfiguration);
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION, request.getConnection());
@@ -133,6 +134,8 @@ public class ServerWorker implements Runnable {
 
         /*Setting the PassThru Pipe*/
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_PIPE, request.getPipe());
+        /* Set message direction - Request */
+        passThruContext.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_REQUEST);
 
         /*ToDo : Set Pipe and dispatch to Mediation Engine */
         System.out.println("Dispatching to Engine");

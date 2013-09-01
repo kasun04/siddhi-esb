@@ -55,12 +55,12 @@
             <version>${hc.httpclient.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
+            <groupId>org.siddhiesb</groupId>
             <artifactId>common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
+            <groupId>org.siddhiesb</groupId>
             <artifactId>mediation-engine</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.nio.NHttpClientConnection;
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.transport.http.conn.ProxyConfig;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
@@ -101,7 +102,7 @@ public class DeliveryAgent {
     public void submit(PassThruContext passThruContext) {
         try {
 
-            String toAddress = (String)passThruContext.getProperty("To");
+            String toAddress = (String)passThruContext.getProperty(CommonAPIConstants.ENDPOINT);
             URL url = new URL(toAddress);
             String scheme = url.getProtocol() != null ? url.getProtocol() : "http";
             String hostname = url.getHost();

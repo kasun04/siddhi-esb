@@ -11,4 +11,10 @@ public interface PassThruContext {
 
     public void reset();
 
+    public void setCtxId(String messageId);
+
+    public String getCtxId();
+
+
+
 }

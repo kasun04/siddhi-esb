@@ -39,7 +39,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.synapse</groupId>
+            <groupId>org.siddhiesb</groupId>
             <artifactId>common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -52,6 +52,12 @@
             <groupId>org.wso2.siddhi</groupId>
             <artifactId>siddhi-api</artifactId>
             <version>2.0.0-wso2v4</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>4.10</version>
         </dependency>
     </dependencies>
 

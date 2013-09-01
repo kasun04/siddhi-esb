@@ -43,6 +43,7 @@ public class TargetContext {
     /** The current writer */
     private org.siddhiesb.transport.passthru.Pipe writer;
 
+    /*Request PTContext - Used for co-relation*/
     private PassThruContext passThruContext;
 
     public TargetContext(TargetConfiguration targetConfiguration) {
