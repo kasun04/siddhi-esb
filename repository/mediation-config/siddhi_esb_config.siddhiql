@@ -1,12 +1,1 @@
-
-#default Streams
-
-define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string);
-define stream sender ( ptcontext string, endpoint string, receivingFlow string);
-from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow insert into sender;
-
-
-
-
-define stream inFlow (ptcontext string, endpoint string, receivingFlow string, nextFlow string);
-from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow , nextFlow string insert into sender;
+define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string); from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow insert into sender;

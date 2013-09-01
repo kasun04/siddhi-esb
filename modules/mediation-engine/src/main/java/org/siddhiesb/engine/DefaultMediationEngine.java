@@ -4,22 +4,30 @@ import org.siddhiesb.common.api.*;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 
+import java.io.FileReader;
+import java.util.Scanner;
+
 
 public class DefaultMediationEngine implements MediationEngineAPI {
 
     SiddhiManager siddhiManager;
     DefaultSender defaultSender;
+    MediationConfigDeployer mediationConfigDeployer;
 
     public void init(TransportSenderAPI transportSenderAPI) {
 
-        String executionPlan = "define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string);\n" +
-                /*"define stream sender ( ptcontext string, endpoint string, receivingFlow string);\n" +*/
-                "from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow insert into sender;\n";
         defaultSender = new DefaultSender(transportSenderAPI);
         siddhiManager = new SiddhiManager();
 
-        siddhiManager.addExecutionPlan(executionPlan);
         siddhiManager.addCallback(SiddhiESBMediationConstants.SENDER, defaultSender);
+
+        /*Mediation Config Deployer*/
+        mediationConfigDeployer = new MediationConfigDeployer();
+        mediationConfigDeployer.init();
+        mediationConfigDeployer.setSiddhiManager(siddhiManager);
+
+        /*initial cold deployment*/
+        mediationConfigDeployer.deploy();
 
     }
 
