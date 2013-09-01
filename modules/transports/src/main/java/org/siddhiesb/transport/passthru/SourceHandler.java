@@ -66,7 +66,6 @@ public class SourceHandler implements NHttpServerEventHandler {
     }
 
     public void connected(NHttpServerConnection conn) {
-        System.out.println("============ Connected ===============");
         // we have to have these two operations in order
         sourceConfiguration.getSourceConnections().addConnection(conn);
         org.siddhiesb.transport.passthru.SourceContext.create(conn, org.siddhiesb.transport.passthru.ProtocolState.REQUEST_READY, sourceConfiguration);

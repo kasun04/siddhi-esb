@@ -20,7 +20,7 @@ public class DefaultSender extends StreamCallback implements SenderAPI {
 
     /* Receive callback event from Siddhi Engine */
     public void receive(Event[] events) {
-        EventPrinter.print(events);
+        //EventPrinter.print(events);
         PassThruContext reqPassThruContext = MediationEngineUtils.extractPTContext(events);
         if (reqPassThruContext != null) {
             send(reqPassThruContext);

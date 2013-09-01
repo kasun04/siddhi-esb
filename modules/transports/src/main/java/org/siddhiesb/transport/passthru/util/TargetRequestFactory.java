@@ -19,6 +19,7 @@ package org.siddhiesb.transport.passthru.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.conn.routing.HttpRoute;
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.transport.passthru.TargetRequest;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
@@ -34,8 +35,8 @@ public class TargetRequestFactory {
                                        HttpRoute route, 
                                        TargetConfiguration configuration) {
         try {
-            String epAddress = "http://localhost:6060/services/SimpleStockQuoteService";
-            String httpMethod = "POST";
+            String epAddress = (String)msgContext.getProperty(CommonAPIConstants.ENDPOINT);
+            String httpMethod = (String)msgContext.getProperty("HTTP_METHOD");
             boolean hasEntityBody = true;
             URL url = new URL(epAddress);
             TargetRequest request = new TargetRequest(configuration, route, url, httpMethod, hasEntityBody);

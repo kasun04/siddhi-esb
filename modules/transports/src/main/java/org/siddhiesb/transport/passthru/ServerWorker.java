@@ -138,11 +138,7 @@ public class ServerWorker implements Runnable {
         passThruContext.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_REQUEST);
 
         /*ToDo : Set Pipe and dispatch to Mediation Engine */
-        System.out.println("Dispatching to Engine");
         genericMediationEngine.process(passThruContext);
-
-
-
     }
 
 

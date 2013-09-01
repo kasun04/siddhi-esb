@@ -19,6 +19,7 @@ public class DefaultMediationEngine implements MediationEngineAPI {
         defaultSender = new DefaultSender(transportSenderAPI);
         siddhiManager = new SiddhiManager();
 
+        //siddhiManager.addExecutionPlan(executionPlan);
         siddhiManager.addCallback(SiddhiESBMediationConstants.SENDER, defaultSender);
 
         /*Mediation Config Deployer*/
@@ -55,6 +56,9 @@ public class DefaultMediationEngine implements MediationEngineAPI {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+       /* passThruContext.setProperty(CommonAPIConstants.ENDPOINT, "http://localhost:9000/service/EchoService");
+        defaultSender.send(passThruContext);*/
     }
 
     private void processResponse(PassThruContext passThruContext) {
