@@ -22,6 +22,7 @@ public class DefaultSender extends StreamCallback implements SenderAPI {
     public void receive(Event[] events) {
         //EventPrinter.print(events);
         PassThruContext reqPassThruContext = MediationEngineUtils.extractPTContext(events);
+
         if (reqPassThruContext != null) {
             send(reqPassThruContext);
         }

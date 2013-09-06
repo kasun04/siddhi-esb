@@ -33,7 +33,6 @@ public class MediationConfigDeployer implements ConfigDeployerAPI {
             while (fileScanner.hasNextLine()) {
                 executionPlan.append(fileScanner.nextLine());
             }
-            System.out.println("==== Mediation config hot deployed ====");
             siddhiManager.addExecutionPlan(executionPlan.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();

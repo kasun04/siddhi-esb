@@ -70,6 +70,7 @@
         <module>modules/transports</module>
         <module>modules/mediation-engine</module>
         <module>modules/controller</module>
+        <module>modules/distribution</module>
     </modules>
 
     <properties>

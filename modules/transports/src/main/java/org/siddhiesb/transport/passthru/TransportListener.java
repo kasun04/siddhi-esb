@@ -69,7 +69,7 @@ public class TransportListener implements TransportListenerAPI {
 
     public void init(MediationEngineAPI mediationEngineAPI) {
 
-        workerPool = WorkerPoolFactory.getWorkerPool(20, 40, 10000, 1000, "trp-listener", "trp-listener");
+        workerPool = WorkerPoolFactory.getWorkerPool(400, 500, 60, -1, "trp-listener", "trp-listener");
 
         /*Create Source Config*/
         sourceConfiguration = new SourceConfiguration(null, workerPool);

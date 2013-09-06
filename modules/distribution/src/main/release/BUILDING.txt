@@ -1,13 +1,9 @@
-Building Synapse from Source
+Building Siddhi ESB from Source
 
-The Synapse source code is available at http://svn.apache.org/repos/asf/webservices/synapse/trunk/java
+Siddi ESB is available at https://github.com/kasun04/siddhi-esb
 
-To build Synapse, you will need JDK 1.5.x., Maven 2.0.6
 
-The Synapse JARs could be built with Maven 2 as follows:
+Prereq : JDK 1.6 or higher, maven 3
 
-  mvn clean install
+Building the source code : mvn clean install
 
-To build the site, use:
-
-  mvn site

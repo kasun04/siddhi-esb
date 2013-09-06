@@ -54,7 +54,7 @@ public class TransportSender implements TransportSenderAPI {
     }
 
     public void init(MediationEngineAPI mediationEngine) {
-        WorkerPool workerPool = WorkerPoolFactory.getWorkerPool(20, 40, 10000, 1000, "trp-sender", "trp-sender");
+        WorkerPool workerPool = WorkerPoolFactory.getWorkerPool(400, 500, 60, -1, "trp-sender", "trp-sender");
 
         /*Creating Target Config with null Authenticator*/
         targetConfiguration = new TargetConfiguration(workerPool, null);
