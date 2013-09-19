@@ -61,18 +61,25 @@ PRGDIR=`dirname "$PRG"`
 [ -z "$SIDDHI_ESB_HOME" ] && SIDDHI_ESB_HOME=`cd "$PRGDIR/.." ; pwd`
 
 
+while [ $# -ge 1 ]; do
 
-# For OS400
-if $os400; then
-  # Set job priority to standard for interactive (interactive - 6) by using
-  # the interactive priority - 6, the helper threads that respond to requests
-  # will be running at the same priority as interactive jobs.
-  COMMAND='chgjob job('$JOBNAME') runpty(6)'
-  system $COMMAND
+if [ "$1" = "-xdebug" ]; then
+    XDEBUG="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,address=5005"
+    shift
 
-  # Enable multi threading
-  export QIBM_MULTI_THREADED=Y
-fi
+
+elif [ "$1" = "-h" ]; then
+    echo "commands:"
+    shift
+    exit 0
+
+  else
+    echo "Error: unknown command:$1"
+    shift
+    exit 1
+  fi
+
+done
 
 
 SIDDHI_ESB_CLASSPATH=$SIDDHI_ESB_CLASSPATH:"$SIDDHI_ESB_HOME/lib"
@@ -89,7 +96,6 @@ jdk_15=`$JAVA_HOME/bin/java -version 2>&1 | grep 1.5`
 # ----- Execute The Requested Command -----------------------------------------
 
 cd $SIDDHI_ESB_HOME
-echo "Starting Siddhi ESB ..."
 echo "Using SIDDHI_ESB_HOME:    $SIDDHI_ESB_HOME"
 echo "Using JAVA_HOME:       $JAVA_HOME"
 

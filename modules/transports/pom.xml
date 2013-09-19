@@ -59,11 +59,11 @@
             <artifactId>common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>org.siddhiesb</groupId>
             <artifactId>mediation-engine</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>commons-collections</groupId>

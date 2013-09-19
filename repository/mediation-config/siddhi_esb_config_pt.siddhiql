@@ -1,0 +1,1 @@
+define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string); from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;

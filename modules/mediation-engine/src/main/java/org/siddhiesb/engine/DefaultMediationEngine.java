@@ -1,10 +1,12 @@
 package org.siddhiesb.engine;
 
 import org.siddhiesb.common.api.*;
+import org.siddhiesb.engine.util.XPathEvaluator;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
@@ -19,8 +21,11 @@ public class DefaultMediationEngine implements MediationEngineAPI {
         defaultSender = new DefaultSender(transportSenderAPI);
         siddhiManager = new SiddhiManager();
 
-        //siddhiManager.addExecutionPlan(executionPlan);
         siddhiManager.addCallback(SiddhiESBMediationConstants.SENDER, defaultSender);
+
+        ArrayList<Class> extensionList = new ArrayList<Class>();
+        extensionList.add(XPathEvaluator.class);
+        siddhiManager.getSiddhiContext().setSiddhiExtensions(extensionList);
 
         /*Mediation Config Deployer*/
         mediationConfigDeployer = new MediationConfigDeployer();

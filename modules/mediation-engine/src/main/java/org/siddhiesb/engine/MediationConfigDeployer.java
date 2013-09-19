@@ -18,11 +18,8 @@ public class MediationConfigDeployer implements ConfigDeployerAPI {
     }
 
     public boolean deploy() {
-       /* System.out.println("============ Mediation config deployed ======");
-        String executionPlan = "define stream inFlow ( ptcontext string, receivingFlow string, nextFlow string);\n" +
-                "from inFlow select ptcontext, 'http://localhost:9000/services/SimpleStockQuoteService' as endpoint, receivingFlow insert into sender;\n";
-        siddhiManager.addExecutionPlan(executionPlan);*/
-        deploy(new File("/home/kasun/development/wso2/wso2src/git/siddhi-esb/repository/mediation-config/siddhi_esb_config.siddhiql"));
+        String workingDir = System.getProperty("user.dir");
+        deploy(new File( workingDir + "/repository/mediation-config/siddhi_esb_config.siddhiql"));
         return true;
     }
 

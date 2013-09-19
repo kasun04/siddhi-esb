@@ -20,7 +20,7 @@ public class ESBController {
 
     public void start() {
         this.log = LogFactory.getLog(this.getClass());
-        log.info("Starting Controller =============");
+        log.info("----------- Starting Siddhi ESB... -------------");
 
         transportListener = new TransportListener();
         transportSender = new TransportSender();
@@ -37,6 +37,8 @@ public class ESBController {
 
         /*Starting TransportListener*/
         transportListener.start();
+        log.info("----------- Siddhi ESB Started Successfully -------------");
+
     }
 
     public void stop() {
