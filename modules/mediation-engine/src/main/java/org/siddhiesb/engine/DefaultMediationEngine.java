@@ -2,6 +2,7 @@ package org.siddhiesb.engine;
 
 import org.siddhiesb.common.api.*;
 import org.siddhiesb.engine.util.XPathEvaluator;
+import org.siddhiesb.engine.util.XSLTTransformer;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 
@@ -25,6 +26,7 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
         ArrayList<Class> extensionList = new ArrayList<Class>();
         extensionList.add(XPathEvaluator.class);
+        extensionList.add(XSLTTransformer.class);
         siddhiManager.getSiddhiContext().setSiddhiExtensions(extensionList);
 
         /*Mediation Config Deployer*/

@@ -138,12 +138,24 @@ public class XPathEvaluator extends FunctionExecutor {
                         "            <symbol>kasun</symbol>\n" +
                         "         </request>\n" +
                         "      </getQuote>";
+        String exampleXML2 =
+                "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
+                        "\n" + "      <getQuote>\n" +
+                        "         <request>\n" +
+                        "            <symbol>kasun</symbol>\n" +
+                        "         </request>\n" +
+                        "      </getQuote>";
+
         InputStream inputStream = new ByteArrayInputStream(exampleXML.getBytes());
-        String xpathString = "/getQuote/request/symbol/text()";
+        String xpathString = "/getQuote/request/symbol";
         XMLStreamingXPath xmlStreamingXPath = new XMLStreamingXPath();
         xmlStreamingXPath.setXpathQuery(xpathString);
-        String s = (String)xmlStreamingXPath.getValueOf(inputStream);
-        System.out.println("Val " + s);
+
+        String val1 = (String)xmlStreamingXPath.getValueOf(inputStream);
+        String val2 = (String) xmlStreamingXPath.getValueOf(new ByteArrayInputStream(exampleXML2.getBytes()));
+        System.out.println("Val " + val1);
+        System.out.println("Val " + val2);
+
 
     }
 }
