@@ -33,6 +33,7 @@ public class XPathEvaluator extends FunctionExecutor {
         /* ToDo :NPEs FIx this */
         String xpathExpr = ((ConstantExpressionExecutor) attributeExpressionExecutors.get(0)).execute(null).toString();
         xmlStreamingXPath = new XMLStreamingXPath();
+
         xmlStreamingXPath.setXpathQuery(xpathExpr);
     }
 
@@ -64,7 +65,6 @@ public class XPathEvaluator extends FunctionExecutor {
                     bufferedInputStream.reset();
                     bufferedInputStream.mark(0);
                     passThruContext.setProperty(org.apache.synapse.transport.passthru.PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedInputStream);
-                    //RelayUtils.buildMessage(context);
                 } catch (Exception e) {
                 }
                 return null;
@@ -146,6 +146,14 @@ public class XPathEvaluator extends FunctionExecutor {
                         "         </request>\n" +
                         "      </getQuote>";
 
+        String exampleXML3 =
+                "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
+                        "\n" + "      <getQuote>\n" +
+                        "         <request>\n" +
+                        "            <symbol>kasun</symbol>\n" +
+                        "         </request>\n" +
+                        "      </getQuote>";
+
         InputStream inputStream = new ByteArrayInputStream(exampleXML.getBytes());
         String xpathString = "/getQuote/request/symbol";
         XMLStreamingXPath xmlStreamingXPath = new XMLStreamingXPath();
@@ -153,8 +161,11 @@ public class XPathEvaluator extends FunctionExecutor {
 
         String val1 = (String)xmlStreamingXPath.getValueOf(inputStream);
         String val2 = (String) xmlStreamingXPath.getValueOf(new ByteArrayInputStream(exampleXML2.getBytes()));
+        String val3 = (String) xmlStreamingXPath.getValueOf(new ByteArrayInputStream(exampleXML3.getBytes()));
+
         System.out.println("Val " + val1);
         System.out.println("Val " + val2);
+        System.out.println("Val " + val3);
 
 
     }

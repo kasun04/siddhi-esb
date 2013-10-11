@@ -49,6 +49,14 @@
                 <include>siddhi_esb_config.siddhiql</include>
             </includes>
         </fileSet>
+	 <fileSet>
+            <directory>../../repository/resources/samples</directory>
+            <outputDirectory>siddhi-esb-1.0.0/repository/resources/samples</outputDirectory>
+	    <includes>
+		<include>transform.xslt</include>
+	    </includes>
+        </fileSet>
+
 
     </fileSets>
 

@@ -4,6 +4,7 @@ import org.siddhiesb.common.api.PassThruContext;
 import org.wso2.siddhi.core.config.SiddhiContext;
 import org.wso2.siddhi.core.event.AtomicEvent;
 import org.wso2.siddhi.core.event.in.InEvent;
+import org.wso2.siddhi.core.executor.expression.ConstantExpressionExecutor;
 import org.wso2.siddhi.core.executor.expression.ExpressionExecutor;
 import org.wso2.siddhi.core.executor.function.FunctionExecutor;
 import org.wso2.siddhi.query.api.definition.Attribute;
@@ -28,14 +29,13 @@ public class XSLTTransformer extends FunctionExecutor {
     private final Object transformerLock = new Object();
     private Map<String, Templates> cachedTemplatesMap = new Hashtable<String, Templates>();
     private TransformerFactory transFact = TransformerFactory.newInstance();
-
+    private String xsltKey;
 
     private ExpressionExecutor expressionExecutor;
 
     @Override
     public void init(Attribute.Type[] types, SiddhiContext siddhiContext) {
-        expressionExecutor = attributeExpressionExecutors.get(1);
-
+        xsltKey = ((ConstantExpressionExecutor) attributeExpressionExecutors.get(0)).execute(null).toString();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class XSLTTransformer extends FunctionExecutor {
             if (((InEvent) eventObj).getData0() instanceof PassThruContext) {
                 PassThruContext passThruContext = (PassThruContext) ((InEvent) eventObj).getData0();
                 try {
-                    boolean res = transformMessage(passThruContext, "ass");
+                    boolean res = transformMessage(passThruContext, xsltKey);
                     if (res) {
                         resultVal = "true";
                     }
@@ -120,7 +120,8 @@ public class XSLTTransformer extends FunctionExecutor {
         Templates cachedTemplates = null;
 
         try {
-            StreamSource xsltSource = new StreamSource(new File("/home/kasun/development/wso2/wso2src/git/siddhi-esb/repository/samples/transform.xslt"));
+            String workingDir = System.getProperty("user.dir");
+            StreamSource xsltSource = new StreamSource(new File(workingDir + xsltKey));
             cachedTemplates = transFact.newTemplates(xsltSource);
             if (cachedTemplates == null) {
                 // if cached template creation failed
