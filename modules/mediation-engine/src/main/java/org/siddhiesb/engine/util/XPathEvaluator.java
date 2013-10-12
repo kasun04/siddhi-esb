@@ -28,8 +28,6 @@ public class XPathEvaluator extends FunctionExecutor {
 
     @Override
     public void init(Attribute.Type[] types, SiddhiContext siddhiContext) {
-        expressionExecutor = attributeExpressionExecutors.get(1);
-
         /* ToDo :NPEs FIx this */
         String xpathExpr = ((ConstantExpressionExecutor) attributeExpressionExecutors.get(0)).execute(null).toString();
         xmlStreamingXPath = new XMLStreamingXPath();

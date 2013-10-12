@@ -86,6 +86,8 @@ public class ClientWorker implements Runnable {
         /*Co-relation Request-Response*/
         clientWorkerPTCtx.setCtxId(passThruContext.getCtxId());
 
+        clientWorkerPTCtx.setProperty(PassThroughConstants.HTTP_HEADERS, response.getHeaders());
+
         genericMediationEngine = mediationEngine;
     }
 

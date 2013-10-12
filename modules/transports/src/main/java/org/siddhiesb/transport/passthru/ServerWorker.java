@@ -17,6 +17,8 @@
 package org.siddhiesb.transport.passthru;
 
 import java.io.OutputStream;
+import java.util.Map;
+import java.util.Set;
 
 
 import org.apache.commons.logging.Log;
@@ -48,14 +50,6 @@ public class ServerWorker implements Runnable {
      */
     private SourceConfiguration sourceConfiguration = null;
 
-    private static final String SOAP_ACTION_HEADER = "SOAPAction";
-
-    /**
-     * Weather we should do rest dispatching or not
-     */
-    private boolean isRestDispatching = true;
-
-
     /*Generic Mediation Engine*/
     private MediationEngineAPI genericMediationEngine;
 
@@ -74,6 +68,8 @@ public class ServerWorker implements Runnable {
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_REQUEST, request);
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION, sourceConfiguration);
         passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION, request.getConnection());
+
+        passThruContext.setProperty(PassThroughConstants.HTTP_HEADERS, request.getHeaders());
 
         genericMediationEngine = mediationEngine;
     }

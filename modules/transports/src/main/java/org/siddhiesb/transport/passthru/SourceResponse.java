@@ -96,11 +96,13 @@ public class SourceResponse {
         } else {
             response.setStatusCode(status);
         }
+
+        /*ToDo: Content-Length and Cunking needs to be properly handled */
         BasicHttpEntity entity = new BasicHttpEntity();
         int contentLength = -1;
-    	String contentLengthHeader = null; 
+        String contentLengthHeader = null;
         if(headers.get(HTTP.CONTENT_LEN) != null && headers.get(HTTP.CONTENT_LEN).size() > 0) {
-        	contentLengthHeader = headers.get(HTTP.CONTENT_LEN).first();
+            contentLengthHeader = headers.get(HTTP.CONTENT_LEN).first();
         } 
 
         if (contentLengthHeader != null) {

@@ -24,13 +24,15 @@ import java.util.Map;
 
 public class SourceResponseFactory {
 
-    public static SourceResponse create(PassThruContext msgContext,
+    public static SourceResponse create(PassThruContext passThruContext,
                                         SourceRequest sourceRequest,
                                         SourceConfiguration sourceConfiguration) {
         int statusCode = 200;//get status code
         SourceResponse sourceResponse =
                 new SourceResponse(sourceConfiguration, statusCode, sourceRequest);
 
+        Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+        addResponseHeader(sourceResponse, headersMap);
         return sourceResponse;
     }
 

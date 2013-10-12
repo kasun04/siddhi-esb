@@ -140,4 +140,6 @@ public class PassThroughConstants {
 
     // Enable the SOAP trace facility to PassThrough
     public static final String TRACE_SOAP_MESSAGE = "wso2tracer";
+
+    public static final String HTTP_HEADERS = "HTTP_HEADERS";
 }
