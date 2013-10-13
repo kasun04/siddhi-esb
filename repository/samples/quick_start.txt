@@ -1,5 +1,14 @@
 
-API Invocation API =: Siddhi Stream definition, if not defined -> route to inFlow
+Overview
+========
+
+- inFlow    : Default request path
+- outFlow   : Default response path
+- sender    : HTTP Sender based on 'enpoint' uri
+- responder : Sending message back to the client
+- ptcontext : carrier
+- receivingFlow : Specific receiver for a given invocation
+
 
 
 PT, CBR and Transform
