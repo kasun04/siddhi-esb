@@ -1,0 +1,7 @@
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream cbrFow ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, receivingFlow insert into cbrFow;
+from cbrFow [siddhiESB:evalXPath('/Envelope/Body/buyStocks/info/company/text()') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;

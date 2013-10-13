@@ -63,9 +63,24 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
     private void processRequest(PassThruContext passThruContext) {
         try {
-            /*Check URL to identify the requested Flow. If not, use the default InFlow */
-            InputHandler inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.IN_FLOW);
+            /*Use the InFlow as the default API*/
+            String api = SiddhiESBMediationConstants.IN_FLOW;
+            if (passThruContext.getProperty("To") != null) {
+                String urlContext = (String) passThruContext.getProperty("To");
+                String[] ctxArray = urlContext.split("/");
+                if (ctxArray.length > 1) {
+                    api = ctxArray[1];
+                }
+            }
+
+            InputHandler inputHandler = siddhiManager.getInputHandler(api);
+
+            /*If the API flow cannot be found, then route to default inFlow*/
+            if (inputHandler == null) {
+                inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.IN_FLOW);
+            }
             inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
