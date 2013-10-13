@@ -75,11 +75,11 @@
             <version>9.1.0.8</version>
             <classifier>s9api</classifier>
         </dependency>
-        <dependency>
+       <!-- <dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
             <version>2.2.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.siddhiesb</groupId>
             <artifactId>siddhiesb-passthru-transport</artifactId>
