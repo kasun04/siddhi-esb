@@ -8,15 +8,15 @@ public class MediationEngineUtils {
 
     public static PassThruContext extractPTContext(Event[] events) {
         PassThruContext passThruContext = null;
-        if (events != null &&
-                events[0] != null && events[0].getData0() instanceof PassThruContext) {
-            passThruContext = (PassThruContext) events[0].getData0();
+        if (events != null && events.length > 0 && events[0] != null) {
+            Object[] contextObjects = events[0].getData();
+            if (contextObjects.length >= 2) {
+                passThruContext = (PassThruContext)contextObjects[0];
+                passThruContext.setProperty(CommonAPIConstants.ENDPOINT, contextObjects[1]);
+            } else if (contextObjects.length == 1) {
+                passThruContext  = (PassThruContext)contextObjects[0];
+            }
         }
-
-        if (passThruContext != null) {
-            passThruContext.setProperty(CommonAPIConstants.ENDPOINT, events[0].getData1());
-        }
-
         return passThruContext;
     }
 

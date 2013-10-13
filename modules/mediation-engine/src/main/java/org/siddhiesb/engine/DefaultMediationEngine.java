@@ -15,15 +15,20 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
     SiddhiManager siddhiManager;
     DefaultSender defaultSender;
+    DefaultResponder defaultResponder;
     MediationConfigDeployer mediationConfigDeployer;
 
     public void init(TransportSenderAPI transportSenderAPI) {
 
         defaultSender = new DefaultSender(transportSenderAPI);
+        defaultResponder = new DefaultResponder(transportSenderAPI);
+
         siddhiManager = new SiddhiManager();
 
         siddhiManager.addCallback(SiddhiESBMediationConstants.SENDER, defaultSender);
+        siddhiManager.addCallback(SiddhiESBMediationConstants.RESPONDER, defaultResponder);
 
+        /*Extension Handling*/
         ArrayList<Class> extensionList = new ArrayList<Class>();
         extensionList.add(XPathEvaluator.class);
         extensionList.add(XSLTTransformer.class);
@@ -58,6 +63,7 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
     private void processRequest(PassThruContext passThruContext) {
         try {
+            /*Check URL to identify the requested Flow. If not, use the default InFlow */
             InputHandler inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.IN_FLOW);
             inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
         } catch (InterruptedException e) {
@@ -69,7 +75,16 @@ public class DefaultMediationEngine implements MediationEngineAPI {
     }
 
     private void processResponse(PassThruContext passThruContext) {
-        defaultSender.send(passThruContext);
+
+        try {
+            InputHandler inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.OUT_FLOW);
+            inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        //defaultSender.send(passThruContext);
 
     }
 

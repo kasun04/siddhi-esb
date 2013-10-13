@@ -1,0 +1,39 @@
+
+
+PT - Multiple Flows
+====================
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream cbrFow ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, receivingFlow insert into cbrFow;
+from cbrFow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+
+CBR - Multiple Flows
+=====================
+
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream cbrFow ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, receivingFlow insert into cbrFow;
+from cbrFow [siddhiESB:evalXPath('/getQuote/request/symbol') == '<symbol>kasun</symbol>' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+
+Transformations - Multiple Flows
+================================
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream transformFlow ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, receivingFlow insert into transformFlow;
+from transformFlow [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;
