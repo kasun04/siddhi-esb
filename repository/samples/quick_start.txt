@@ -2,6 +2,22 @@
 API Invocation API =: Siddhi Stream definition, if not defined -> route to inFlow
 
 
+PT, CBR and Transform
+=====================
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream cbrapi ( ptcontext string, receivingFlow string);
+define stream tranformapi ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;
+
+from cbrapi [siddhiESB:evalXPath('/message/payload/buyStocks/info/company/text()') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from tranformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+
+
+
 PT - Multiple Flows
 ====================
 
@@ -40,21 +56,6 @@ from inFlow select ptcontext, receivingFlow insert into transformFlow;
 from transformFlow [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
 from outFlow select ptcontext insert into responder;
 
-
-
-PT, CBR and Transform
-=====================
-
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream cbrapi ( ptcontext string, receivingFlow string);
-define stream tranformapi ( ptcontext string, receivingFlow string);
-
-from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-from outFlow select ptcontext insert into responder;
-
-from cbrapi [siddhiESB:evalXPath('/message/payload/buyStocks/info/company/text()') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-from tranformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
 
 
 
