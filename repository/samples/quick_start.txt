@@ -4,7 +4,7 @@ Overview
 
 - inFlow    : Default request path
 - outFlow   : Default response path
-- sender    : HTTP Sender based on 'enpoint' uri
+- sender    : HTTP Sender based on 'endpoint' uri
 - responder : Sending message back to the client
 - ptcontext : carrier
 - receivingFlow : Specific receiver for a given invocation
