@@ -59,7 +59,32 @@
 	    <url>http://download.java.net/maven/2/</url> 
 	    <layout>default</layout> 
 	</pluginRepository>
+	<pluginRepository>
+            <id>wso2-m3-snapshots</id>
+            <name>WSO2 Nexus repo</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/wso2maven2/</url>
+            <layout>default</layout>
+	    <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
     </pluginRepositories>
+
+
+   <repositories>      
+ 	<repository>
+           <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+             <releases>
+                 <enabled>true</enabled>
+                 <updatePolicy>daily</updatePolicy>
+                 <checksumPolicy>ignore</checksumPolicy>
+             </releases>
+         </repository>  
+   </repositories>
+
+
    
     <dependencyManagement>
     </dependencyManagement>

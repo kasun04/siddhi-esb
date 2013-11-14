@@ -38,6 +38,11 @@ public class XSLTTransformer extends FunctionExecutor {
         xsltKey = ((ConstantExpressionExecutor) attributeExpressionExecutors.get(0)).execute(null).toString();
     }
 
+
+public void	destroy() {}
+
+
+
     @Override
     protected Object process(Object eventObj) {
         String resultVal = "false";

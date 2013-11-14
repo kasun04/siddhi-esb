@@ -72,7 +72,9 @@ public class XPathEvaluator extends FunctionExecutor {
 
 
     }
-
+     
+    public void destroy(){}
+    
     @Override
     protected Object process(Object eventObj) {
         String resultVal = "";
