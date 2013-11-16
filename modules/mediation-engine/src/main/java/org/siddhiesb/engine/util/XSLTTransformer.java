@@ -79,9 +79,9 @@ public void	destroy() {}
         InputStream inputStream = null;
         Templates cTemplate = null;
 
-        Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
-        if (pipe != null) {
-            inputStream = pipe.getInputStream();
+        Pipe pipe1 = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        if (pipe1 != null) {
+            inputStream = pipe1.getInputStream();
         }
 
         /*ToDo : Do we have to synchronize here? */
@@ -90,22 +90,48 @@ public void	destroy() {}
         } else {
             cTemplate = cachedTemplatesMap.get(xsltKey);
         }
-        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
 
-        OutputStream msgContextOutStream = pipe.resetOutputStream();
+        System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+        Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        OutputStream pipeOutputStream = pipe.resetOutputStream();
         ByteArrayOutputStream transformedBaos = new ByteArrayOutputStream();
         transform(inputStream, transformedBaos, cTemplate);
 
-        ByteArrayOutputStream transformedOutNew = new ByteArrayOutputStream();
-        IOUtils.write(transformedBaos.toByteArray(), transformedOutNew);
-        BufferedInputStream bufferedStream = new BufferedInputStream(new ByteArrayInputStream(transformedOutNew.toByteArray()));
-        passThruContext.setProperty(PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedStream);
-        IOUtils.write(transformedBaos.toByteArray(),msgContextOutStream);
+        String encodiingStr = "<?xml version='1.0' encoding='utf-8'?>";
+        String SOAP_ENVELOPE_11_START = "<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>";
+        String SOAP_ENVELOPE_11_END = "</soapenv:Body></soapenv:Envelope>";
 
+
+
+        ByteArrayOutputStream _transformedOutMessageNew = new ByteArrayOutputStream();
+        IOUtils.write(encodiingStr.getBytes(), _transformedOutMessageNew);
+        IOUtils.write(transformedBaos.toByteArray(), _transformedOutMessageNew);
+
+
+        IOUtils.write(_transformedOutMessageNew.toByteArray(), pipeOutputStream);
         pipe.setRawSerializationComplete(true);
 
-        return true;
-    }
+        Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+        headersMap.put("Content-Length", transformedBaos.size());
+      /*  Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+        for (Object header : headersMap.keySet()) {
+            Object value = headersMap.get(header);
+            if (header instanceof String && value != null && value instanceof String) {
+                if (header.equals("Content-Length")) {
+                    System.out.println("Content Length");
+                    value = transformedBaos.size();
+                }
+            }
+        }*/
+
+        /*ByteArrayOutputStream transformedOutNew = new ByteArrayOutputStream();
+        IOUtils.write(transformedBaos.toByteArray(), transformedOutNew);
+        BufferedInputStream bufferedStream = new BufferedInputStream(new ByteArrayInputStream(transformedOutNew.toByteArray()));
+        passThruContext.setProperty(PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedStream);*/
+
+
+            return true;
+        }
 
     private boolean isCreationOrRecreationRequired(PassThruContext passThruContext, String xsltKey) {
 

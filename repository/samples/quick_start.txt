@@ -43,19 +43,38 @@ from outFlow select ptcontext insert into responder;
 CBR - Multiple Flows
 =====================
 
+Request Flow CBR
+----------------
 
 define stream inFlow ( ptcontext string, receivingFlow string);
 define stream outFlow ( ptcontext string, receivingFlow string);
 define stream cbrFlow ( ptcontext string, receivingFlow string);
 
 from inFlow select ptcontext, receivingFlow insert into cbrFlow;
-from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == '<symbol>kasun</symbol>' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == 'kasun' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
 from outFlow select ptcontext insert into responder;
+
+
+Response Flow CBR
+-----------------
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream cbrFlow ( ptcontext string, receivingFlow string);
+
+
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into cbrFlow;
+from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == 'kasun' ] select ptcontext insert into responder;
+
 
 
 
 Transformations - Multiple Flows
 ================================
+
+Transform IN Flow
+
 
 define stream inFlow ( ptcontext string, receivingFlow string);
 define stream outFlow ( ptcontext string, receivingFlow string);
@@ -66,6 +85,15 @@ from transformFlow [siddhiESB:xsltTransform('/repository/resources/samples/trans
 from outFlow select ptcontext insert into responder;
 
 
+Transform Out Flow
+
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream transformapi ( ptcontext string);
+
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into transformapi;
+from transformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext insert into responder;
 
 
 
