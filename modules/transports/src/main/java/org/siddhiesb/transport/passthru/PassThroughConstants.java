@@ -142,4 +142,5 @@ public class PassThroughConstants {
     public static final String TRACE_SOAP_MESSAGE = "wso2tracer";
 
     public static final String HTTP_HEADERS = "HTTP_HEADERS";
+    public static final String CONTENT_LENGTH = "Content-Length";
 }

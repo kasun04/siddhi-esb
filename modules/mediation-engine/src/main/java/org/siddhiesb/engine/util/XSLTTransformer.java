@@ -1,5 +1,6 @@
 package org.siddhiesb.engine.util;
 
+import org.siddhiesb.common.api.CommonAPIConstants;
 import org.siddhiesb.common.api.PassThruContext;
 import org.wso2.siddhi.core.config.SiddhiContext;
 import org.wso2.siddhi.core.event.AtomicEvent;
@@ -98,11 +99,6 @@ public void	destroy() {}
         transform(inputStream, transformedBaos, cTemplate);
 
         String encodiingStr = "<?xml version='1.0' encoding='utf-8'?>";
-        String SOAP_ENVELOPE_11_START = "<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>";
-        String SOAP_ENVELOPE_11_END = "</soapenv:Body></soapenv:Envelope>";
-
-
-
         ByteArrayOutputStream _transformedOutMessageNew = new ByteArrayOutputStream();
         IOUtils.write(encodiingStr.getBytes(), _transformedOutMessageNew);
         IOUtils.write(transformedBaos.toByteArray(), _transformedOutMessageNew);
@@ -111,27 +107,15 @@ public void	destroy() {}
         IOUtils.write(_transformedOutMessageNew.toByteArray(), pipeOutputStream);
         pipe.setRawSerializationComplete(true);
 
-        Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
-        headersMap.put("Content-Length", transformedBaos.size());
-      /*  Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
-        for (Object header : headersMap.keySet()) {
-            Object value = headersMap.get(header);
-            if (header instanceof String && value != null && value instanceof String) {
-                if (header.equals("Content-Length")) {
-                    System.out.println("Content Length");
-                    value = transformedBaos.size();
-                }
-            }
-        }*/
 
-        /*ByteArrayOutputStream transformedOutNew = new ByteArrayOutputStream();
-        IOUtils.write(transformedBaos.toByteArray(), transformedOutNew);
-        BufferedInputStream bufferedStream = new BufferedInputStream(new ByteArrayInputStream(transformedOutNew.toByteArray()));
-        passThruContext.setProperty(PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedStream);*/
-
-
-            return true;
+        /* Workaround to handle content length for responses. */
+        if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+            Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+            headersMap.put(PassThroughConstants.CONTENT_LENGTH, transformedBaos.size());
         }
+
+        return true;
+    }
 
     private boolean isCreationOrRecreationRequired(PassThruContext passThruContext, String xsltKey) {
 
