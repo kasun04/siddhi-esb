@@ -85,12 +85,16 @@ public void	destroy() {}
             inputStream = pipe1.getInputStream();
         }
 
-        /*ToDo : Do we have to synchronize here? */
         if (isCreationOrRecreationRequired(passThruContext, xsltKey)) {
-            cTemplate = createTemplate(passThruContext, xsltKey);
+            synchronized (transformerLock) {
+                cTemplate = createTemplate(passThruContext, xsltKey);
+            }
         } else {
-            cTemplate = cachedTemplatesMap.get(xsltKey);
+            synchronized (transformerLock) {
+                cTemplate = cachedTemplatesMap.get(xsltKey);
+            }
         }
+
 
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
         Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
