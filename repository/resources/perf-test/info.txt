@@ -1,0 +1,24 @@
+
+Environment
+===========
+
+Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz
+Mem:          7868 
+Linux version 3.8.0-19-generic 
+
+
+Criteria
+========
+n=1000, c=100, iterations=10 per each scenario
+1M messages per each scenario
+Message Size 1K
+TPS - Best case request per second with no failed messages
+
+Versions 
+========
+WSO2 ESB - 4.7 GA, Siddhi ESB 1.0
+
+Perf Comparison
+===============
+
+https://docs.google.com/spreadsheet/ccc?key=0AmoMq3qaZQg1dFNHb1VLbU9NcFV4QWNvcE45UzBQLXc#gid=0

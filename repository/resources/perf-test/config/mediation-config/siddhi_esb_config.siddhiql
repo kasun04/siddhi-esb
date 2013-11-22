@@ -1,0 +1,12 @@
+define stream inFlow ( ptcontext string, receivingFlow string);
+define stream outFlow ( ptcontext string, receivingFlow string);
+define stream hbrapi ( ptcontext string, receivingFlow string);
+define stream cbrapi ( ptcontext string, receivingFlow string);
+define stream transformapi ( ptcontext string, receivingFlow string);
+
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from outFlow select ptcontext insert into responder;
+
+from hbrapi [siddhiESB:evalXPath('$http:ROUTING_LOCATION') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from cbrapi [siddhiESB:evalXPath('//order[1]/symbol') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from transformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform_perf.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
