@@ -1,4 +1,3 @@
-
 Overview
 ========
 
@@ -9,6 +8,69 @@ Overview
 - ptcontext : carrier
 - receivingFlow : Specific receiver for a given invocation
 
+Quick Start Guide 
+================= 
+
+Direct Proxy/Pass-Through
+=========================
+
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+URI - http://127.0.0.1:7070/anyuri 
+
+
+
+Header Based Routing (HBR)
+==========================
+
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+define stream hbrapi ( ptcontext string);
+
+from hbrapi [siddhiESB:evalXPath('$http:ROUTING_LOCATION') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+URI - http://127.0.0.1:7070/hbrapi
+
+
+Content Based Routing (CBR)
+===========================
+
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+define stream cbrapi ( ptcontext string);
+
+
+from cbrapi [siddhiESB:evalXPath('//order[1]/symbol') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+Transformations
+==============
+
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+define stream transformapi ( ptcontext string);
+
+from transformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
+from outFlow select ptcontext insert into responder;
+
+
+
+
+
+
+
+
+Advanced Config
+===============
+===============
 
 
 PT, CBR and Transform
