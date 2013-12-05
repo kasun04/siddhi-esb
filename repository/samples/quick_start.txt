@@ -6,7 +6,7 @@ Overview
 - sender    : HTTP Sender based on 'endpoint' uri
 - responder : Sending message back to the client
 - ptcontext : carrier
-- receivingFlow : Specific receiver for a given invocation
+
 
 Quick Start Guide 
 ================= 
@@ -14,14 +14,14 @@ Quick Start Guide
 Direct Proxy/Pass-Through
 =========================
 
-define stream inFlow ( ptcontext string);
-define stream outFlow ( ptcontext string);
+define stream inFlow ( message string);
+define stream outFlow ( message string);
 
-from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
-from outFlow select ptcontext insert into responder;
+from inFlow select message, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
+from outFlow select message insert into responder;
 
 
-URI - http://127.0.0.1:7070/anyuri 
+Invocation : URL - http://127.0.0.1:7070/anyuri
 
 
 
@@ -36,7 +36,7 @@ from hbrapi [siddhiESB:evalXPath('$http:ROUTING_LOCATION') == 'WSO2' ] select pt
 from outFlow select ptcontext insert into responder;
 
 
-URI - http://127.0.0.1:7070/hbrapi
+URL - http://127.0.0.1:7070/hbrapi
 
 
 Content Based Routing (CBR)
@@ -51,6 +51,11 @@ from cbrapi [siddhiESB:evalXPath('//order[1]/symbol') == 'WSO2' ] select ptconte
 from outFlow select ptcontext insert into responder;
 
 
+
+URL - http://127.0.0.1:7070/cbrapi
+
+
+
 Transformations
 ==============
 
@@ -63,9 +68,7 @@ from outFlow select ptcontext insert into responder;
 
 
 
-
-
-
+URL - http://127.0.0.1:7070/transformapi
 
 
 Advanced Config
@@ -73,59 +76,31 @@ Advanced Config
 ===============
 
 
-PT, CBR and Transform
-=====================
-
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream cbrapi ( ptcontext string, receivingFlow string);
-define stream tranformapi ( ptcontext string, receivingFlow string);
-
-from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-from outFlow select ptcontext insert into responder;
-
-from cbrapi [siddhiESB:evalXPath('/message/payload/buyStocks/info/company/text()') == 'WSO2' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-from tranformapi [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-
-
-
 PT - Multiple Flows
 ====================
 
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream cbrFlow ( ptcontext string, receivingFlow string);
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+define stream cbrFlow ( ptcontext string);
 
-from inFlow select ptcontext, receivingFlow insert into cbrFlow;
-from cbrFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from inFlow select ptcontext insert into cbrFlow;
+from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == 'kasun' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
 from outFlow select ptcontext insert into responder;
 
 
 
-CBR - Multiple Flows
-=====================
 
-Request Flow CBR
-----------------
-
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream cbrFlow ( ptcontext string, receivingFlow string);
-
-from inFlow select ptcontext, receivingFlow insert into cbrFlow;
-from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == 'kasun' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
-from outFlow select ptcontext insert into responder;
 
 
 Response Flow CBR
 -----------------
 
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream cbrFlow ( ptcontext string, receivingFlow string);
+define stream inFlow ( ptcontext string);
+define stream outFlow ( ptcontext string);
+define stream cbrFlow ( ptcontext string);
 
 
-from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
+from inFlow select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint insert into sender;
 from outFlow select ptcontext insert into cbrFlow;
 from cbrFlow [siddhiESB:evalXPath('/getQuote/request/symbol') == 'kasun' ] select ptcontext insert into responder;
 
@@ -138,11 +113,11 @@ Transformations - Multiple Flows
 Transform IN Flow
 
 
-define stream inFlow ( ptcontext string, receivingFlow string);
-define stream outFlow ( ptcontext string, receivingFlow string);
-define stream transformFlow ( ptcontext string, receivingFlow string);
+define stream inFlow ( ptcontext string );
+define stream outFlow ( ptcontext string);
+define stream transformFlow (ptcontext string);
 
-from inFlow select ptcontext, receivingFlow insert into transformFlow;
+from inFlow select ptcontext insert into transformFlow;
 from transformFlow [siddhiESB:xsltTransform('/repository/resources/samples/transform.xslt') == 'true' ] select ptcontext, 'http://localhost:9000/service/EchoService' as endpoint, receivingFlow insert into sender;
 from outFlow select ptcontext insert into responder;
 

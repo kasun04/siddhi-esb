@@ -34,6 +34,10 @@ public class XSLTTransformer extends FunctionExecutor {
 
     private ExpressionExecutor expressionExecutor;
 
+    private static final String SOAP_11_ENV_ST = "<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body>";
+    private static final String SOAP_ENV_END_11 = "</soapenv:Body></soapenv:Envelope>";
+
+
     @Override
     public void init(Attribute.Type[] types, SiddhiContext siddhiContext) {
         xsltKey = ((ConstantExpressionExecutor) attributeExpressionExecutors.get(0)).execute(null).toString();
@@ -102,10 +106,10 @@ public void	destroy() {}
         ByteArrayOutputStream transformedBaos = new ByteArrayOutputStream();
         transform(inputStream, transformedBaos, cTemplate);
 
-        String encodiingStr = "<?xml version='1.0' encoding='utf-8'?>";
         ByteArrayOutputStream _transformedOutMessageNew = new ByteArrayOutputStream();
-        IOUtils.write(encodiingStr.getBytes(), _transformedOutMessageNew);
+        IOUtils.write(SOAP_11_ENV_ST.getBytes(), _transformedOutMessageNew);
         IOUtils.write(transformedBaos.toByteArray(), _transformedOutMessageNew);
+        IOUtils.write(SOAP_ENV_END_11.getBytes(), _transformedOutMessageNew);
 
 
         IOUtils.write(_transformedOutMessageNew.toByteArray(), pipeOutputStream);
