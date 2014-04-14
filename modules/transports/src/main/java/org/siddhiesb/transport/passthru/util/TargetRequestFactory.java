@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.conn.routing.HttpRoute;
 import org.siddhiesb.common.api.CommonAPIConstants;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.PassThroughConstants;
 import org.siddhiesb.transport.passthru.TargetRequest;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
@@ -34,17 +34,17 @@ public class TargetRequestFactory {
     
 	private static Log log = LogFactory.getLog(TargetRequestFactory.class);
 
-    public static TargetRequest create(PassThruContext passThruContext,
+    public static TargetRequest create(CommonContext commonContext,
                                        HttpRoute route, 
                                        TargetConfiguration configuration) {
         try {
-            String epAddress = (String)passThruContext.getProperty(CommonAPIConstants.ENDPOINT);
-            String httpMethod = (String)passThruContext.getProperty("HTTP_METHOD");
+            String epAddress = (String) commonContext.getProperty(CommonAPIConstants.ENDPOINT);
+            String httpMethod = (String) commonContext.getProperty("HTTP_METHOD");
             boolean hasEntityBody = true;
             URL url = new URL(epAddress);
             TargetRequest request = new TargetRequest(configuration, route, url, httpMethod, hasEntityBody);
 
-            Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+            Map headersMap = (Map) commonContext.getProperty(PassThroughConstants.HTTP_HEADERS);
 
             /*Add all incoming headers to the request*/
             Set<Map.Entry<String, String>> headerEntries = headersMap.entrySet();

@@ -75,15 +75,15 @@
             <version>9.1.0.8</version>
             <classifier>s9api</classifier>
         </dependency>
-       <!-- <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-core</artifactId>
-            <version>2.2.0-SNAPSHOT</version>
-        </dependency>-->
         <dependency>
             <groupId>org.siddhiesb</groupId>
             <artifactId>siddhiesb-passthru-transport</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
 

@@ -17,8 +17,6 @@
 package org.siddhiesb.transport.passthru;
 
 import java.io.OutputStream;
-import java.util.Map;
-import java.util.Set;
 
 
 import org.apache.commons.logging.Log;
@@ -29,9 +27,9 @@ import org.apache.http.HttpVersion;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.protocol.HTTP;
 import org.siddhiesb.common.api.CommonAPIConstants;
-import org.siddhiesb.common.api.DefaultPassThruContext;
+import org.siddhiesb.common.api.DefaultCommonContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.config.SourceConfiguration;
 import org.siddhiesb.transport.passthru.util.PTTUtils;
 
@@ -54,7 +52,7 @@ public class ServerWorker implements Runnable {
     private MediationEngineAPI genericMediationEngine;
 
 
-    private PassThruContext passThruContext;
+    private CommonContext commonContext;
 
     public ServerWorker(final SourceRequest request,
                         final SourceConfiguration sourceConfiguration,
@@ -63,13 +61,13 @@ public class ServerWorker implements Runnable {
         this.request = request;
         this.sourceConfiguration = sourceConfiguration;
 
-        passThruContext = new DefaultPassThruContext();
-        passThruContext.setCtxId(PTTUtils.generateUUID());
-        passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_REQUEST, request);
-        passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION, sourceConfiguration);
-        passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION, request.getConnection());
+        commonContext = new DefaultCommonContext();
+        commonContext.setCtxId(PTTUtils.generateUUID());
+        commonContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_REQUEST, request);
+        commonContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION, sourceConfiguration);
+        commonContext.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION, request.getConnection());
 
-        passThruContext.setProperty(PassThroughConstants.HTTP_HEADERS, request.getHeaders());
+        commonContext.setProperty(PassThroughConstants.HTTP_HEADERS, request.getHeaders());
 
         genericMediationEngine = mediationEngine;
     }
@@ -124,17 +122,17 @@ public class ServerWorker implements Runnable {
         String contentTypeHeader = request.getHeaders().get(HTTP.CONTENT_TYPE);
         String method = request.getRequest() != null ? request.getRequest().getRequestLine().getMethod().toUpperCase() : "";
 
-        passThruContext.setProperty("To", request.getUri());
-        passThruContext.setProperty("HTTP_METHOD", method);
-        passThruContext.setProperty(HTTP.CONTENT_TYPE, contentTypeHeader);
+        commonContext.setProperty("To", request.getUri());
+        commonContext.setProperty("HTTP_METHOD", method);
+        commonContext.setProperty(HTTP.CONTENT_TYPE, contentTypeHeader);
 
         /*Setting the PassThru Pipe*/
-        passThruContext.setProperty(PassThroughConstants.PASS_THROUGH_PIPE, request.getPipe());
+        commonContext.setProperty(PassThroughConstants.PASS_THROUGH_PIPE, request.getPipe());
         /* Set message direction - Request */
-        passThruContext.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_REQUEST);
+        commonContext.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_REQUEST);
 
         /*ToDo : Set Pipe and dispatch to Mediation Engine */
-        genericMediationEngine.process(passThruContext);
+        genericMediationEngine.process(commonContext);
     }
 
 

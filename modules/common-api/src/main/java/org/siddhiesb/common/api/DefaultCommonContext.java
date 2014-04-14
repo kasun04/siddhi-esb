@@ -4,7 +4,7 @@ package org.siddhiesb.common.api;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultPassThruContext implements PassThruContext {
+public class DefaultCommonContext implements CommonContext {
 
     private String messageId;
 

@@ -1,17 +1,16 @@
 package org.siddhiesb.engine;
 
+
 import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.common.api.MessageSenderAPI;
 import org.siddhiesb.common.api.TransportSenderAPI;
 import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.stream.output.StreamCallback;
 
-
-public class DefaultResponder extends StreamCallback implements MessageSenderAPI {
-
+public class DefaultMessageSender extends StreamCallback implements MessageSenderAPI {
     private TransportSenderAPI transportSender;
 
-    public DefaultResponder(TransportSenderAPI transportSender) {
+    public DefaultMessageSender(TransportSenderAPI transportSender) {
         this.transportSender = transportSender;
     }
 
@@ -28,4 +27,5 @@ public class DefaultResponder extends StreamCallback implements MessageSenderAPI
     public void send(CommonContext commonContext) {
         transportSender.invoke(commonContext);
     }
+
 }

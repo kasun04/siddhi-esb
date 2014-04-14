@@ -1,7 +1,7 @@
 package org.siddhiesb.engine.util;
 
 import org.siddhiesb.common.api.CommonAPIConstants;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.wso2.siddhi.core.config.SiddhiContext;
 import org.wso2.siddhi.core.event.AtomicEvent;
 import org.wso2.siddhi.core.event.in.InEvent;
@@ -11,7 +11,6 @@ import org.wso2.siddhi.core.executor.function.FunctionExecutor;
 import org.wso2.siddhi.query.api.definition.Attribute;
 
 import org.apache.commons.io.IOUtils;
-import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.transport.passthru.PassThroughConstants;
 import org.siddhiesb.transport.passthru.Pipe;
 
@@ -52,10 +51,10 @@ public void	destroy() {}
     protected Object process(Object eventObj) {
         String resultVal = "false";
         if (eventObj instanceof InEvent) {
-            if (((InEvent) eventObj).getData0() instanceof PassThruContext) {
-                PassThruContext passThruContext = (PassThruContext) ((InEvent) eventObj).getData0();
+            if (((InEvent) eventObj).getData0() instanceof CommonContext) {
+                CommonContext commonContext = (CommonContext) ((InEvent) eventObj).getData0();
                 try {
-                    boolean res = transformMessage(passThruContext, xsltKey);
+                    boolean res = transformMessage(commonContext, xsltKey);
                     if (res) {
                         resultVal = "true";
                     }
@@ -79,19 +78,19 @@ public void	destroy() {}
     }
 
 
-    private boolean transformMessage(PassThruContext passThruContext, String xsltKey) throws Exception{
+    private boolean transformMessage(CommonContext commonContext, String xsltKey) throws Exception{
 
         InputStream inputStream = null;
         Templates cTemplate = null;
 
-        Pipe pipe1 = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        Pipe pipe1 = (Pipe) commonContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
         if (pipe1 != null) {
             inputStream = pipe1.getInputStream();
         }
 
-        if (isCreationOrRecreationRequired(passThruContext, xsltKey)) {
+        if (isCreationOrRecreationRequired(commonContext, xsltKey)) {
             synchronized (transformerLock) {
-                cTemplate = createTemplate(passThruContext, xsltKey);
+                cTemplate = createTemplate(commonContext, xsltKey);
             }
         } else {
             synchronized (transformerLock) {
@@ -101,7 +100,7 @@ public void	destroy() {}
 
 
         System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
-        Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        Pipe pipe = (Pipe) commonContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
         OutputStream pipeOutputStream = pipe.resetOutputStream();
         ByteArrayOutputStream transformedBaos = new ByteArrayOutputStream();
         transform(inputStream, transformedBaos, cTemplate);
@@ -117,15 +116,15 @@ public void	destroy() {}
 
 
         /* Workaround to handle content length for responses. */
-        if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
-            Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+        if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.equals(commonContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+            Map headersMap = (Map) commonContext.getProperty(PassThroughConstants.HTTP_HEADERS);
             headersMap.put(PassThroughConstants.CONTENT_LENGTH, transformedBaos.size());
         }
 
         return true;
     }
 
-    private boolean isCreationOrRecreationRequired(PassThruContext passThruContext, String xsltKey) {
+    private boolean isCreationOrRecreationRequired(CommonContext commonContext, String xsltKey) {
 
 
         // if there are no cachedTemplates inside cachedTemplatesMap or
@@ -138,7 +137,7 @@ public void	destroy() {}
     }
 
 
-    private Templates createTemplate(PassThruContext passThruContext, String xsltKey) {
+    private Templates createTemplate(CommonContext commonContext, String xsltKey) {
         // Assign created template
         Templates cachedTemplates = null;
 

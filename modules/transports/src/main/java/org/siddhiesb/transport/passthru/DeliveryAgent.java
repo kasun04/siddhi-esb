@@ -27,7 +27,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.nio.NHttpClientConnection;
 import org.siddhiesb.common.api.CommonAPIConstants;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.http.conn.ProxyConfig;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
 import org.siddhiesb.transport.passthru.connections.TargetConnections;
@@ -58,8 +58,8 @@ public class DeliveryAgent {
      * number of connections to the host:pair is being used. So these messages has to wait
      * until a new connection is available.
      */
-    private Map<HttpRoute, Queue<PassThruContext>> waitingMessages =
-            new ConcurrentHashMap<HttpRoute, Queue<PassThruContext>>();
+    private Map<HttpRoute, Queue<CommonContext>> waitingMessages =
+            new ConcurrentHashMap<HttpRoute, Queue<CommonContext>>();
 
     /** The connection management */
     private TargetConnections targetConnections;
@@ -97,12 +97,12 @@ public class DeliveryAgent {
      * to wait until a connection is established. In this case this method will inform the
      * system about the need for a connection.
      *
-     * @param passThruContext the message context to be sent
+     * @param commonContext the message context to be sent
      */
-    public void submit(PassThruContext passThruContext) {
+    public void submit(CommonContext commonContext) {
         try {
 
-            String toAddress = (String)passThruContext.getProperty(CommonAPIConstants.ENDPOINT);
+            String toAddress = (String) commonContext.getProperty(CommonAPIConstants.ENDPOINT);
             URL url = new URL(toAddress);
             String scheme = url.getProtocol() != null ? url.getProtocol() : "http";
             String hostname = url.getHost();
@@ -128,19 +128,19 @@ public class DeliveryAgent {
             }
 
             // first we queue the message
-            Queue<PassThruContext> queue = null;
+            Queue<CommonContext> queue = null;
             lock.lock();
             try {
                 queue = waitingMessages.get(route);
                 if (queue == null) {
-                    queue = new ConcurrentLinkedQueue<PassThruContext>();
+                    queue = new ConcurrentLinkedQueue<CommonContext>();
                     waitingMessages.put(route, queue);
                 }
                 if (queue.size() == maxWaitingMessages) {
-                    PassThruContext msgCtx = queue.poll();
+                    CommonContext msgCtx = queue.poll();
                 }
 
-                queue.add(passThruContext);
+                queue.add(commonContext);
             } finally {
                 lock.unlock();
             }
@@ -149,10 +149,10 @@ public class DeliveryAgent {
             if (conn != null) {
                 conn.resetInput();
                 conn.resetOutput();
-                PassThruContext passThruContext1 = queue.poll();
+                CommonContext commonContext1 = queue.poll();
 
-                if (passThruContext1 != null) {
-                    tryNextMessage(passThruContext1, route, conn);
+                if (commonContext1 != null) {
+                    tryNextMessage(commonContext1, route, conn);
                 }
             }
 
@@ -162,9 +162,9 @@ public class DeliveryAgent {
     }
 
     public void errorConnecting(HttpRoute route, int errorCode, String message) {
-        Queue<PassThruContext> queue = waitingMessages.get(route);
+        Queue<CommonContext> queue = waitingMessages.get(route);
         if (queue != null) {
-            PassThruContext msgCtx = queue.poll();
+            CommonContext msgCtx = queue.poll();
         } else {
             throw new IllegalStateException("Queue cannot be null for: " + route);
         }
@@ -176,7 +176,7 @@ public class DeliveryAgent {
      *
      */
     public void connected(HttpRoute route) {
-        Queue<PassThruContext> queue = null;
+        Queue<CommonContext> queue = null;
         lock.lock();
         try {
             queue = waitingMessages.get(route);
@@ -187,7 +187,7 @@ public class DeliveryAgent {
         while (queue.size() > 0) {
             NHttpClientConnection conn = targetConnections.getConnection(route);
             if (conn != null) {
-                PassThruContext messageContext = queue.poll();
+                CommonContext messageContext = queue.poll();
                 if (messageContext != null) {
                     tryNextMessage(messageContext, route, conn);
                 }
@@ -197,22 +197,22 @@ public class DeliveryAgent {
         }
     }
 
-    private void tryNextMessage(PassThruContext passThruContext, HttpRoute route, NHttpClientConnection conn) {
+    private void tryNextMessage(CommonContext commonContext, HttpRoute route, NHttpClientConnection conn) {
         if (conn != null) {
-            TargetContext.get(conn).setPassThruContext(passThruContext);
-            submitRequest(conn, route, passThruContext);
+            TargetContext.get(conn).setCommonContext(commonContext);
+            submitRequest(conn, route, commonContext);
         }
     }
 
-    private void submitRequest(NHttpClientConnection conn, HttpRoute route, PassThruContext passThruContext) {
+    private void submitRequest(NHttpClientConnection conn, HttpRoute route, CommonContext commonContext) {
         if (log.isDebugEnabled()) {
             log.debug("Submitting new request to the connection: " + conn);
         }
 
-        TargetRequest request = TargetRequestFactory.create(passThruContext, route, targetConfiguration);
+        TargetRequest request = TargetRequestFactory.create(commonContext, route, targetConfiguration);
         TargetContext.setRequest(conn, request);
 
-        org.siddhiesb.transport.passthru.Pipe pipe = (org.siddhiesb.transport.passthru.Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        org.siddhiesb.transport.passthru.Pipe pipe = (org.siddhiesb.transport.passthru.Pipe) commonContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
         if (pipe != null) {
             pipe.attachConsumer(conn);
             request.connect(pipe);

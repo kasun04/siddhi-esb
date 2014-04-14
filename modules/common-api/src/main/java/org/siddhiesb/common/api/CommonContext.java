@@ -1,7 +1,7 @@
 package org.siddhiesb.common.api;
 
 
-public interface PassThruContext {
+public interface CommonContext {
 
     public void init();
 

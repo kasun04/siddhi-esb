@@ -32,13 +32,8 @@ import org.apache.http.nio.ContentEncoder;
 import org.apache.http.nio.NHttpClientConnection;
 import org.apache.http.nio.NHttpClientEventHandler;
 import org.apache.http.protocol.HttpContext;
-import org.siddhiesb.transport.passthru.*;
-import org.siddhiesb.transport.passthru.ClientWorker;
-import org.siddhiesb.transport.passthru.Pipe;
-import org.siddhiesb.transport.passthru.ProtocolState;
-import org.siddhiesb.transport.passthru.TargetContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.http.conn.ClientConnFactory;
 import org.siddhiesb.transport.http.conn.ProxyTunnelHandler;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
@@ -238,7 +233,7 @@ public class TargetHandler implements NHttpClientEventHandler {
             org.siddhiesb.transport.passthru.TargetContext.setResponse(conn, targetResponse);
             targetResponse.start(conn);
 
-            PassThruContext requestContext = org.siddhiesb.transport.passthru.TargetContext.get(conn).getPassThruContext();
+            CommonContext requestContext = org.siddhiesb.transport.passthru.TargetContext.get(conn).getCommonContext();
 
             targetConfiguration.getWorkerPool().execute(
                     new ClientWorker(requestContext, targetResponse, mediationEngine));

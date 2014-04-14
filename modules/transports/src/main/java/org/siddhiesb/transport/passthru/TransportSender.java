@@ -13,8 +13,8 @@ import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.SyncBasicHttpParams;
 import org.siddhiesb.common.api.CommonAPIConstants;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
-import org.siddhiesb.common.api.PassThruContext;
 import org.siddhiesb.common.api.TransportSenderAPI;
 import org.siddhiesb.transport.http.conn.ClientConnFactory;
 import org.siddhiesb.transport.http.conn.Scheme;
@@ -128,33 +128,33 @@ public class TransportSender implements TransportSenderAPI {
     }
 
 
-    public void invoke(PassThruContext passThruContext) {
-        String messageDirection = (String)passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION);
+    public void invoke(CommonContext commonContext) {
+        String messageDirection = (String) commonContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION);
         if (CommonAPIConstants.MESSAGE_DIRECTION_REQUEST.equals(messageDirection)) {
             /*Request Path*/
-            String endpointAddress = (String)passThruContext.getProperty(CommonAPIConstants.ENDPOINT);
-            passThruContext.setProperty(CommonAPIConstants.ENDPOINT, endpointAddress);
+            String endpointAddress = (String) commonContext.getProperty(CommonAPIConstants.ENDPOINT);
+            commonContext.setProperty(CommonAPIConstants.ENDPOINT, endpointAddress);
 
             /*ToDo: Check to PT Pipe*/
-            deliveryAgent.submit(passThruContext);
+            deliveryAgent.submit(commonContext);
             /*submit request ?*/
         } else if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.equals(messageDirection)) {
             /*Response Path*/
-            submitResponse(passThruContext);
+            submitResponse(commonContext);
         }
     }
 
-    public void submitResponse(PassThruContext passThruContext) {
-        NHttpServerConnection conn = (NHttpServerConnection) passThruContext.getProperty(
+    public void submitResponse(CommonContext commonContext) {
+        NHttpServerConnection conn = (NHttpServerConnection) commonContext.getProperty(
                 PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION);
-        SourceConfiguration sourceConfiguration = (SourceConfiguration) passThruContext.getProperty(
+        SourceConfiguration sourceConfiguration = (SourceConfiguration) commonContext.getProperty(
                 PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION);
 
         SourceRequest sourceRequest = org.siddhiesb.transport.passthru.SourceContext.getRequest(conn);
-        SourceResponse sourceResponse = SourceResponseFactory.create(passThruContext,
+        SourceResponse sourceResponse = SourceResponseFactory.create(commonContext,
                 sourceRequest, sourceConfiguration);
         SourceContext.setResponse(conn, sourceResponse);
-        org.siddhiesb.transport.passthru.Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        org.siddhiesb.transport.passthru.Pipe pipe = (Pipe) commonContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
 
         pipe.attachConsumer(conn);
         sourceResponse.connect(pipe);

@@ -1,6 +1,6 @@
 package org.siddhiesb.engine.util;
 
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.PassThroughConstants;
 import org.siddhiesb.transport.passthru.Pipe;
 import org.wso2.siddhi.core.config.SiddhiContext;
@@ -18,10 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 import javax.xml.transform.stream.StreamSource;
@@ -36,7 +33,7 @@ import net.sf.saxon.s9api.XdmValue;
 
 
 @SiddhiExtension(namespace = "siddhiESB", function = "evalXPath")
-public class XPathEvaluator extends FunctionExecutor {
+    public class XPathEvaluator extends FunctionExecutor {
 
     public static final String XPATH_CTX = "$ctx:";
     public static final String XPATH_HTTP_CTX = "$http:";
@@ -85,26 +82,26 @@ public class XPathEvaluator extends FunctionExecutor {
     protected Object process(Object eventObj) {
         String resultVal = "";
         if (eventObj instanceof InEvent) {
-            if (((InEvent) eventObj).getData0() instanceof PassThruContext) {
-                PassThruContext passThruContext = (PassThruContext) ((InEvent) eventObj).getData0();
+            if (((InEvent) eventObj).getData0() instanceof CommonContext) {
+                CommonContext commonContext = (CommonContext) ((InEvent) eventObj).getData0();
                 if (httpCtxName != null && !"".equals(httpCtxName)) {
-                    Map headerMap = (Map)passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+                    Map headerMap = (Map) commonContext.getProperty(PassThroughConstants.HTTP_HEADERS);
                     resultVal = (String)headerMap.get(httpCtxName);
                 }  else if (ctxName != null && !"".equals(ctxName)) {
-                    resultVal = (String) passThruContext.getProperty(ctxName);
+                    resultVal = (String) commonContext.getProperty(ctxName);
                 } else {
                     /*Calling Saxon XPath*/
-                    resultVal = evaluateSaxonXpath(passThruContext).toString();
+                    resultVal = evaluateSaxonXpath(commonContext).toString();
                 }
             }
         }
         return resultVal;
     }
 
-    private Object evaluateSaxonXpath(PassThruContext passThruContext) {
+    private Object evaluateSaxonXpath(CommonContext commonContext) {
 
         String resultStr = "";
-        Pipe pipe = (Pipe) passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
+        Pipe pipe = (Pipe) commonContext.getProperty(PassThroughConstants.PASS_THROUGH_PIPE);
         if (pipe != null) {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(pipe.getInputStream());
             bufferedInputStream.mark(128 * 1024);
@@ -116,7 +113,7 @@ public class XPathEvaluator extends FunctionExecutor {
                 try {
                     bufferedInputStream.reset();
                     bufferedInputStream.mark(0);
-                    passThruContext.setProperty(PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedInputStream);
+                    commonContext.setProperty(PassThroughConstants.BUFFERED_INPUT_STREAM, bufferedInputStream);
                 } catch (Exception e) {
                 }
                 return null;

@@ -9,7 +9,7 @@ import org.apache.commons.io.monitor.FileAlterationObserver;
 import java.io.File;
 
 public class MediationConfigObserver {
-    public static final String configLocation = "/home/kasun/development/wso2/wso2src/git/siddhi-esb/repository/mediation-config";
+    public static final String configLocation = "./repository/mediation-config";
     public static final long pollingInterval = 15000;
 
     MediationConfigDeployer configDeployer;

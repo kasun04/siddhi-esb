@@ -16,7 +16,7 @@
 
 package org.siddhiesb.transport.passthru.util;
 
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.*;
 import org.siddhiesb.transport.passthru.config.SourceConfiguration;
 
@@ -24,14 +24,14 @@ import java.util.Map;
 
 public class SourceResponseFactory {
 
-    public static SourceResponse create(PassThruContext passThruContext,
+    public static SourceResponse create(CommonContext commonContext,
                                         SourceRequest sourceRequest,
                                         SourceConfiguration sourceConfiguration) {
         int statusCode = 200;//get status code
         SourceResponse sourceResponse =
                 new SourceResponse(sourceConfiguration, statusCode, sourceRequest);
 
-        Map headersMap = (Map) passThruContext.getProperty(PassThroughConstants.HTTP_HEADERS);
+        Map headersMap = (Map) commonContext.getProperty(PassThroughConstants.HTTP_HEADERS);
         addResponseHeader(sourceResponse, headersMap);
         return sourceResponse;
     }

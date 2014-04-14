@@ -17,9 +17,7 @@
 package org.siddhiesb.transport.passthru;
 
 import org.apache.http.nio.NHttpConnection;
-import org.siddhiesb.transport.passthru.*;
-import org.siddhiesb.transport.passthru.ProtocolState;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
 import java.nio.ByteBuffer;
 
@@ -44,7 +42,7 @@ public class TargetContext {
     private org.siddhiesb.transport.passthru.Pipe writer;
 
     /*Request PTContext - Used for co-relation*/
-    private PassThruContext passThruContext;
+    private CommonContext commonContext;
 
     public TargetContext(TargetConfiguration targetConfiguration) {
         this.targetConfiguration = targetConfiguration;
@@ -180,11 +178,11 @@ public class TargetContext {
         return (TargetContext) conn.getContext().getAttribute(CONNECTION_INFORMATION);
     }
 
-    public PassThruContext getPassThruContext() {
-        return passThruContext;
+    public CommonContext getCommonContext() {
+        return commonContext;
     }
 
-    public void setPassThruContext(PassThruContext passThruContext) {
-        this.passThruContext = passThruContext;
+    public void setCommonContext(CommonContext commonContext) {
+        this.commonContext = commonContext;
     }
 }

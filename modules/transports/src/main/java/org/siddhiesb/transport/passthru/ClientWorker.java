@@ -25,9 +25,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.protocol.HTTP;
 import org.siddhiesb.common.api.CommonAPIConstants;
-import org.siddhiesb.common.api.DefaultPassThruContext;
+import org.siddhiesb.common.api.CommonContext;
+import org.siddhiesb.common.api.DefaultCommonContext;
 import org.siddhiesb.common.api.MediationEngineAPI;
-import org.siddhiesb.common.api.PassThruContext;
 
 public class ClientWorker implements Runnable {
     private Log log = LogFactory.getLog(ClientWorker.class);
@@ -37,13 +37,13 @@ public class ClientWorker implements Runnable {
     /** weather a body is expected or not */
     private boolean expectEntityBody = true;
 
-    private PassThruContext clientWorkerPTCtx;
+    private CommonContext clientWorkerPTCtx;
 
     private MediationEngineAPI genericMediationEngine;
 
 
 
-    public ClientWorker(PassThruContext passThruContext,
+    public ClientWorker(CommonContext commonContext,
                         TargetResponse response,
                         MediationEngineAPI mediationEngine) {
         this.response = response;
@@ -70,12 +70,12 @@ public class ClientWorker implements Runnable {
 
         }
 
-        clientWorkerPTCtx = new DefaultPassThruContext();
+        clientWorkerPTCtx = new DefaultCommonContext();
 
         clientWorkerPTCtx.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION,
-                passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION));
+                commonContext.getProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONNECTION));
         clientWorkerPTCtx.setProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION,
-                passThruContext.getProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION));
+                commonContext.getProperty(PassThroughConstants.PASS_THROUGH_SOURCE_CONFIGURATION));
 
         clientWorkerPTCtx.setProperty(PassThroughConstants.PASS_THROUGH_PIPE, response.getPipe());
         clientWorkerPTCtx.setProperty(PassThroughConstants.PASS_THROUGH_TARGET_RESPONSE, response);
@@ -84,7 +84,7 @@ public class ClientWorker implements Runnable {
         /*To identify a response in the transport sender*/
         clientWorkerPTCtx.setProperty(CommonAPIConstants.MESSAGE_DIRECTION, CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE);
         /*Co-relation Request-Response*/
-        clientWorkerPTCtx.setCtxId(passThruContext.getCtxId());
+        clientWorkerPTCtx.setCtxId(commonContext.getCtxId());
 
         clientWorkerPTCtx.setProperty(PassThroughConstants.HTTP_HEADERS, response.getHeaders());
 

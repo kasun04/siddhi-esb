@@ -6,21 +6,19 @@ import org.siddhiesb.engine.util.XSLTTransformer;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.stream.input.InputHandler;
 
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 
 public class DefaultMediationEngine implements MediationEngineAPI {
 
     SiddhiManager siddhiManager;
-    DefaultSender defaultSender;
+    DefaultMessageSender defaultSender;
     DefaultResponder defaultResponder;
     MediationConfigDeployer mediationConfigDeployer;
 
     public void init(TransportSenderAPI transportSenderAPI) {
 
-        defaultSender = new DefaultSender(transportSenderAPI);
+        defaultSender = new DefaultMessageSender(transportSenderAPI);
         defaultResponder = new DefaultResponder(transportSenderAPI);
 
         siddhiManager = new SiddhiManager();
@@ -44,16 +42,16 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
     }
 
-    public void process(PassThruContext passThruContext) {
+    public void process(CommonContext commonContext) {
 
         if (CommonAPIConstants.MESSAGE_DIRECTION_REQUEST.
-                equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+                equals(commonContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
             /*Handling Request*/
-            processRequest(passThruContext);
+            processRequest(commonContext);
         } else if (CommonAPIConstants.MESSAGE_DIRECTION_RESPONSE.
-                equals(passThruContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
+                equals(commonContext.getProperty(CommonAPIConstants.MESSAGE_DIRECTION))) {
             /*Handling Response*/
-            processResponse(passThruContext);
+            processResponse(commonContext);
         }
     }
 
@@ -61,12 +59,12 @@ public class DefaultMediationEngine implements MediationEngineAPI {
 
     }
 
-    private void processRequest(PassThruContext passThruContext) {
+    private void processRequest(CommonContext commonContext) {
         try {
             /*Use the InFlow as the default API*/
             String api = SiddhiESBMediationConstants.IN_FLOW;
-            if (passThruContext.getProperty("To") != null) {
-                String urlContext = (String) passThruContext.getProperty("To");
+            if (commonContext.getProperty("To") != null) {
+                String urlContext = (String) commonContext.getProperty("To");
                 String[] ctxArray = urlContext.split("/");
                 if (ctxArray.length > 1) {
                     api = ctxArray[1];
@@ -79,27 +77,27 @@ public class DefaultMediationEngine implements MediationEngineAPI {
             if (inputHandler == null) {
                 inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.IN_FLOW);
             }
-            inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
+            inputHandler.send(new Object[]{commonContext, "recFlow", "nxtFlow"});
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-       /* passThruContext.setProperty(CommonAPIConstants.ENDPOINT, "http://localhost:9000/service/EchoService");
-        defaultSender.send(passThruContext);*/
+       /* commonContext.setProperty(CommonAPIConstants.ENDPOINT, "http://localhost:9000/service/EchoService");
+        defaultSender.send(commonContext);*/
     }
 
-    private void processResponse(PassThruContext passThruContext) {
+    private void processResponse(CommonContext commonContext) {
 
         try {
             InputHandler inputHandler = siddhiManager.getInputHandler(SiddhiESBMediationConstants.OUT_FLOW);
-            inputHandler.send(new Object[]{passThruContext, "recFlow", "nxtFlow"});
+            inputHandler.send(new Object[]{commonContext, "recFlow", "nxtFlow"});
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
 
-        //defaultSender.send(passThruContext);
+        //defaultSender.send(commonContext);
 
     }
 

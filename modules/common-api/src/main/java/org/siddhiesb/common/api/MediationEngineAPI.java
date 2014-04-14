@@ -5,7 +5,7 @@ public interface MediationEngineAPI {
 
     public void init(TransportSenderAPI transportSender);
 
-    public void process(PassThruContext passThruContext);
+    public void process(CommonContext commonContext);
 
     public void stop();
 

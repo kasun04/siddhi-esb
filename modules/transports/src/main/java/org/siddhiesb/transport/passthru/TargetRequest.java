@@ -30,10 +30,7 @@ import org.apache.http.nio.NHttpClientConnection;
 import org.apache.http.params.DefaultedHttpParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HTTP;
-import org.siddhiesb.transport.passthru.*;
-import org.siddhiesb.transport.passthru.ProtocolState;
-import org.siddhiesb.transport.passthru.TargetContext;
-import org.siddhiesb.common.api.PassThruContext;
+import org.siddhiesb.common.api.CommonContext;
 import org.siddhiesb.transport.passthru.config.TargetConfiguration;
 
 import java.io.IOException;
@@ -71,7 +68,7 @@ public class TargetRequest {
     /** Keep alive request */
     private boolean keepAlive = true;
 
-    private PassThruContext passThruContext;
+    private CommonContext commonContext;
     
     /**
      * Create a target request.
@@ -115,7 +112,7 @@ public class TargetRequest {
             headers.remove(HTTP.CONTENT_LEN);
         }
         
-        passThruContext = org.siddhiesb.transport.passthru.TargetContext.get(conn).getPassThruContext();
+        commonContext = org.siddhiesb.transport.passthru.TargetContext.get(conn).getCommonContext();
 
         if (hasEntityBody) {
             request = new BasicHttpEntityEnclosingRequest(method, path,
@@ -139,7 +136,7 @@ public class TargetRequest {
         request.setParams(new DefaultedHttpParams(request.getParams(),
                 targetConfiguration.getHttpParams()));
         
-		this.processChunking(conn, passThruContext);
+		this.processChunking(conn, commonContext);
 		
 
         if (!keepAlive) {
@@ -172,7 +169,7 @@ public class TargetRequest {
     }
     
 
-	private void processChunking(NHttpClientConnection conn, PassThruContext requestMsgCtx){
+	private void processChunking(NHttpClientConnection conn, CommonContext requestMsgCtx){
 
     }
 
