@@ -49,7 +49,13 @@ public class TargetRequestFactory {
             /*Add all incoming headers to the request*/
             Set<Map.Entry<String, String>> headerEntries = headersMap.entrySet();
             for (Map.Entry<String, String> headerEntry : headerEntries) {
-                request.addHeader(headerEntry.getKey(), headerEntry.getValue());
+                if (headerEntry.getKey().equals("Content-length")) {
+                    request.addHeader("Content-Length", headerEntry.getValue());
+                } else if (headerEntry.getKey().equals("Content-type")) {
+                    request.addHeader("Content-Type", headerEntry.getValue());
+                } else {
+                    request.addHeader(headerEntry.getKey(), headerEntry.getValue());
+                }
             }
 
             return request;

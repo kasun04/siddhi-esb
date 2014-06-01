@@ -109,6 +109,7 @@ public class TargetRequest {
         String contentLengthHeader = headers.get(HTTP.CONTENT_LEN);
         if (contentLengthHeader != null) {
             contentLength = Integer.parseInt(contentLengthHeader);
+
             headers.remove(HTTP.CONTENT_LEN);
         }
         
